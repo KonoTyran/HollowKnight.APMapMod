@@ -171,6 +171,8 @@ namespace APMapMod.Data
             usedPoolGroups.Clear();
             HashSet<string> unsortedGroups = new();
 
+            // AP INTEGRATION: Add pins from ItemChanger placements properly
+
             //// Randomized placements
             //foreach (KeyValuePair<string, AbstractPlacement> placement in ItemChanger.Internal.Ref.Settings.Placements)
             //{
@@ -195,7 +197,7 @@ namespace APMapMod.Data
 
             //    pd.name = rml.Name;
             //    pd.sceneName = rml.LocationDef.SceneName;
-                
+
             //    if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
             //    {
             //        pd.sceneName = "Room_Colosseum_01";
@@ -228,7 +230,7 @@ namespace APMapMod.Data
             //    //APMapMod.Instance.Log(locationName);
             //    //APMapMod.Instance.Log(pinDef.locationPoolGroup);
             //}
-            
+
             //// Vanilla placements
             //foreach (GeneralizedPlacement placement in RandomizerMod.RandomizerMod.RS.Context.Vanilla)
             //{

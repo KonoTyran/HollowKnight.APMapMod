@@ -68,7 +68,8 @@ namespace APMapMod.Trackers
         {
             orig(self);
 
-            if (RandomizerMod.RandomizerMod.RS.GenerationSettings == null) return;
+            // AP INTEGRATION: Determine if current save is AP
+            //if (RandomizerMod.RandomizerMod.RS.GenerationSettings == null) return;
 
             switch (self.gameObject.name)
             {

@@ -18,8 +18,6 @@ namespace APMapMod.UI
 
         private GameObject _pauseCanvas;
         private GameObject _mapCanvas;
-        private GameObject _transitionCanvas;
-        private GameObject _lookupCanvas;
         public Font TrajanBold { get; private set; }
         public Font TrajanNormal { get; private set; }
         public Font Perpetua { get; private set; }
@@ -41,8 +39,6 @@ namespace APMapMod.UI
 
                 Destroy(Instance._pauseCanvas);
                 Destroy(Instance._mapCanvas);
-                Destroy(Instance._transitionCanvas);
-                Destroy(Instance._lookupCanvas);
                 Destroy(Instance.gameObject);
             }
         }

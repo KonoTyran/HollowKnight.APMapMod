@@ -101,7 +101,7 @@ namespace APMapMod
 
         private void Hook()
         {
-            // AP INTEGRATION: Add way to determine if current save is AP or Vanilla
+            // AP INTEGRATION: Determine if current save is AP
 
             //if (RandomizerMod.RandomizerMod.RS.GenerationSettings == null) return;
 

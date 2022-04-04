@@ -9,9 +9,7 @@ namespace APMapMod.Settings
     {
         FullMap,
         AllPins,
-        PinsOverMap,
-        TransitionRando,
-        TransitionRandoAlt,
+        PinsOverMap
     }
 
     public enum GroupBy
@@ -85,28 +83,6 @@ namespace APMapMod.Settings
                     break;
 
                 case MapMode.PinsOverMap:
-                    if (SettingsUtil.IsTransitionRando())
-                    {
-                        mapMode = MapMode.TransitionRando;
-                    }
-                    else
-                    {
-                        mapMode = MapMode.FullMap;
-                    }
-                    break;
-
-                case MapMode.TransitionRando:
-                    if (SettingsUtil.IsAreaRando())
-                    {
-                        mapMode = MapMode.TransitionRandoAlt;
-                    }
-                    else
-                    {
-                        mapMode = MapMode.FullMap;
-                    }
-                    break;
-
-                case MapMode.TransitionRandoAlt:
                     mapMode = MapMode.FullMap;
                     break;
             }

@@ -382,9 +382,7 @@ namespace APMapMod.Map
             if (boolName.StartsWith("MMS_"))
             {
                 if (APMapMod.LS.ModEnabled &&
-                    (APMapMod.LS.mapMode == MapMode.FullMap
-                        || APMapMod.LS.mapMode == MapMode.TransitionRando
-                        || APMapMod.LS.mapMode == MapMode.TransitionRandoAlt))
+                    APMapMod.LS.mapMode == MapMode.FullMap)
                 {
                     return true;
                 }

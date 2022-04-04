@@ -53,16 +53,5 @@ namespace APMapMod.Settings
                 _ => false,
             };
         }
-
-        public static bool IsTransitionRando()
-        {
-            return RandomizerMod.RandomizerMod.RS.GenerationSettings.TransitionSettings.Mode != RandomizerMod.Settings.TransitionSettings.TransitionMode.None;
-        }
-
-        public static bool IsAreaRando()
-        {
-            return RandomizerMod.RandomizerMod.RS.GenerationSettings.TransitionSettings.Mode == RandomizerMod.Settings.TransitionSettings.TransitionMode.MapAreaRandomizer
-                || RandomizerMod.RandomizerMod.RS.GenerationSettings.TransitionSettings.Mode == RandomizerMod.Settings.TransitionSettings.TransitionMode.FullAreaRandomizer;
-        }
     }
 }

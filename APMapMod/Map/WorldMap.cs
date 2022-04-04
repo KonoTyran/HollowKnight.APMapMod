@@ -24,7 +24,6 @@ namespace APMapMod.Map
             On.GameMap.SetupMapMarkers += GameMap_SetupMapMarkers;
             On.GameMap.DisableMarkers += GameMap_DisableMarkers;
             On.GameManager.UpdateGameMap += GameManager_UpdateGameMap;
-            ModHooks.LanguageGetHook += OnLanguageGetHook;
         }
 
         public static void Unhook()
@@ -35,7 +34,6 @@ namespace APMapMod.Map
             On.GameMap.SetupMapMarkers -= GameMap_SetupMapMarkers;
             On.GameMap.DisableMarkers -= GameMap_DisableMarkers;
             On.GameManager.UpdateGameMap -= GameManager_UpdateGameMap;
-            ModHooks.LanguageGetHook -= OnLanguageGetHook;
         }
 
         // Called every time when a new GameMap is created (once per save load)
@@ -45,9 +43,7 @@ namespace APMapMod.Map
 
             try
             {
-                Dependencies.BenchwarpInterop();
                 DataLoader.SetUsedPinDefs();
-                DataLoader.SetLogicLookup();
 
                 if (APMapMod.LS.NewSettings || APMapMod.LS.PoolGroupSettings.Count == 0)
                 {
@@ -67,21 +63,6 @@ namespace APMapMod.Map
             orig(self, go_gameMap);
             
             GameMap gameMap = go_gameMap.GetComponent<GameMap>();
-
-            Transition.AddExtraComponentsToMap(gameMap);
-
-            if (SettingsUtil.IsTransitionRando())
-            {
-                if (GameObject.Find("MMS Custom Map Rooms") == null)
-                {
-                    goExtraRooms = Transition.CreateExtraMapRooms(gameMap);
-                }
-
-                if (APMapMod.LS.NewSettings)
-                {
-                    APMapMod.LS.mapMode = MapMode.TransitionRando;
-                }
-            }
 
             if (goCustomPins != null)
             {
@@ -121,9 +102,7 @@ namespace APMapMod.Map
 
             // Easiest way to force AdditionalMaps custom areas to show
             if (APMapMod.LS.ModEnabled
-                && (APMapMod.LS.mapMode == MapMode.FullMap
-                    || APMapMod.LS.mapMode == MapMode.TransitionRando
-                    || APMapMod.LS.mapMode == MapMode.TransitionRandoAlt))
+                && APMapMod.LS.mapMode == MapMode.FullMap)
             {
                 foreach (Transform child in self.transform)
                 {
@@ -184,16 +163,6 @@ namespace APMapMod.Map
             return false;
         }
 
-        private static string OnLanguageGetHook(string key, string sheet, string orig)
-        {
-            if (sheet == "MMS" && (Transition.nonMapScenes.Contains(key) || Transition.whitePalaceScenes.Contains(key)))
-            {
-                return key;
-            }
-
-            return orig;
-        }
-
         // The main method for updating map objects and pins when opening either World Map or Quick Map
         public static void UpdateMap(GameMap gameMap, MapZone mapZone)
         {
@@ -202,18 +171,7 @@ namespace APMapMod.Map
             HashSet<string> transitionPinScenes = new();
 
             FullMap.PurgeMap();
-
-            if (SettingsUtil.IsTransitionRando()
-                && APMapMod.LS.ModEnabled
-                && (APMapMod.LS.mapMode == MapMode.TransitionRando
-                    || APMapMod.LS.mapMode == MapMode.TransitionRandoAlt))
-            {
-                    transitionPinScenes = Transition.SetupMapTransitionMode(gameMap);
-            }
-            else
-            {
-                gameMap.SetupMap();
-            }
+            gameMap.SetupMap();
 
             if (goCustomPins == null || !APMapMod.LS.ModEnabled) return;
 

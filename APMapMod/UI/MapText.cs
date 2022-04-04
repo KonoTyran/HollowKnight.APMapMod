@@ -1,7 +1,6 @@
 ﻿using APMapMod.CanvasUtil;
 using APMapMod.Map;
 using APMapMod.Settings;
-using RandomizerMod;
 using UnityEngine;
 
 namespace APMapMod.UI
@@ -80,17 +79,17 @@ namespace APMapMod.UI
 
         private static void SetSpoilers()
         {
-            string spoilersText = $"{Localization.Localize("Spoilers")} (ctrl-1): ";
+            string spoilersText = $"Spoilers (ctrl-1): ";
 
             if (APMapMod.LS.SpoilerOn)
             {
                 _mapDisplayPanel.GetText("Spoilers").SetTextColor(Color.green);
-                spoilersText += Localization.Localize("on");
+                spoilersText += "on";
             }
             else
             {
                 _mapDisplayPanel.GetText("Spoilers").SetTextColor(Color.white);
-                spoilersText += Localization.Localize("off");
+                spoilersText += "off";
             }
 
             _mapDisplayPanel.GetText("Spoilers").UpdateText(spoilersText);
@@ -98,23 +97,23 @@ namespace APMapMod.UI
 
         private static void SetRandomized()
         {
-            string randomizedText = $"{Localization.Localize("Randomized")} (ctrl-2): ";
+            string randomizedText = $"Randomized (ctrl-2): ";
 
             if (APMapMod.LS.randomizedOn)
             {
                 _mapDisplayPanel.GetText("Randomized").SetTextColor(Color.green);
-                randomizedText += Localization.Localize("on");
+                randomizedText += "on";
             }
             else
             {
                 _mapDisplayPanel.GetText("Randomized").SetTextColor(Color.white);
-                randomizedText += Localization.Localize("off");
+                randomizedText += "off";
             }
 
             if (WorldMap.CustomPins.IsRandomizedCustom())
             {
                 _mapDisplayPanel.GetText("Randomized").SetTextColor(Color.yellow);
-                randomizedText += $" ({Localization.Localize("custom")})";
+                randomizedText += $" (custom)";
             }
 
             _mapDisplayPanel.GetText("Randomized").UpdateText(randomizedText);
@@ -122,23 +121,23 @@ namespace APMapMod.UI
 
         private static void SetOthers()
         {
-            string othersText = $"{Localization.Localize("Others")} (ctrl-3): ";
+            string othersText = $"Others (ctrl-3): ";
 
             if (APMapMod.LS.othersOn)
             {
                 _mapDisplayPanel.GetText("Others").SetTextColor(Color.green);
-                othersText += Localization.Localize("on");
+                othersText += "on";
             }
             else
             {
                 _mapDisplayPanel.GetText("Others").SetTextColor(Color.white);
-                othersText += Localization.Localize("off");
+                othersText += "off";
             }
 
             if (WorldMap.CustomPins.IsOthersCustom())
             {
                 _mapDisplayPanel.GetText("Others").SetTextColor(Color.yellow);
-                othersText += $" ({Localization.Localize("custom")})";
+                othersText += $" (custom)";
             }
 
             _mapDisplayPanel.GetText("Others").UpdateText(othersText);
@@ -146,24 +145,24 @@ namespace APMapMod.UI
 
         private static void SetStyle()
         {
-            string styleText = $"{Localization.Localize("Style")} (ctrl-4): ";
+            string styleText = $"Style (ctrl-4): ";
 
             switch (APMapMod.GS.pinStyle)
             {
                 case PinStyle.Normal:
-                    styleText += Localization.Localize("normal");
+                    styleText += "normal";
                     break;
 
                 case PinStyle.Q_Marks_1:
-                    styleText += $"{Localization.Localize("q marks")} 1";
+                    styleText += $"q marks 1";
                     break;
 
                 case PinStyle.Q_Marks_2:
-                    styleText += $"{Localization.Localize("q marks")} 2";
+                    styleText += $"q marks 2";
                     break;
 
                 case PinStyle.Q_Marks_3:
-                    styleText += $"{Localization.Localize("q marks")} 3";
+                    styleText += $"q marks 3";
                     break;
             }
 
@@ -172,20 +171,20 @@ namespace APMapMod.UI
 
         private static void SetSize()
         {
-            string sizeText = $"{Localization.Localize("Size")} (ctrl-5): ";
+            string sizeText = $"Size (ctrl-5): ";
 
             switch (APMapMod.GS.pinSize)
             {
                 case PinSize.Small:
-                    sizeText += Localization.Localize("small");
+                    sizeText += "small";
                     break;
 
                 case PinSize.Medium:
-                    sizeText += Localization.Localize("medium");
+                    sizeText += "medium";
                     break;
 
                 case PinSize.Large:
-                    sizeText += Localization.Localize("large");
+                    sizeText += "large";
                     break;
             }
 
@@ -196,11 +195,11 @@ namespace APMapMod.UI
         {
             if (APMapMod.LS.ModEnabled)
             {
-                _refreshDisplayPanel.GetText("Refresh").UpdateText(Localization.Localize("APMapMod enabled. Close map to refresh"));
+                _refreshDisplayPanel.GetText("Refresh").UpdateText("APMapMod enabled. Close map to refresh");
             }
             else
             {
-                _refreshDisplayPanel.GetText("Refresh").UpdateText(Localization.Localize("APMapMod disabled. Close map to refresh"));
+                _refreshDisplayPanel.GetText("Refresh").UpdateText("APMapMod disabled. Close map to refresh");
             }
         }
     }

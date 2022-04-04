@@ -2,7 +2,6 @@
 using APMapMod.Data;
 using APMapMod.Map;
 using APMapMod.Settings;
-using RandomizerMod;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -103,7 +102,7 @@ namespace APMapMod.UI
                 s => PoolsPanelClicked(),
                 buttonRect,
                 GUIController.Instance.TrajanBold,
-                Localization.Localize("Customize Pins"),
+                "Customize Pins",
                 fontSize: 10
             );
 
@@ -128,7 +127,7 @@ namespace APMapMod.UI
                     PoolClicked,
                     buttonRect,
                     GUIController.Instance.TrajanBold,
-                    Localization.Localize(group),
+                    group,
                     fontSize: 10
                 );
             }
@@ -142,7 +141,7 @@ namespace APMapMod.UI
                 BenchClicked,
                 buttonRect,
                 GUIController.Instance.TrajanBold,
-                Localization.Localize("Benches"),
+                "Benches",
                 fontSize: 10
             );
 
@@ -231,18 +230,10 @@ namespace APMapMod.UI
                     UIManager.instance.checkpointSprite.Hide();
                 }
 
-                if (!APMapMod.LS.ModEnabled
-                    && GameManager.instance.gameMap != null
-                    && SettingsUtil.IsTransitionRando())
-                {
-                    Transition.ResetMapColors(GameManager.instance.gameMap);
-                }
-
                 _mapControlPanel.Destroy();
                 BuildMenu(Canvas);
                 MapText.LockToggleEnable = true;
                 MapText.RebuildText();
-                TransitionText.SetTexts();
             }
         }
 
@@ -254,8 +245,8 @@ namespace APMapMod.UI
                 );
             _mapControlPanel.GetButton("Enable").UpdateText
                 (
-                    APMapMod.LS.ModEnabled? $"{Localization.Localize("Mod")}\n{Localization.Localize("Enabled")}"
-                    : $"{Localization.Localize("Mod")}\n{Localization.Localize("Disabled")}"
+                    APMapMod.LS.ModEnabled? "Mod\nEnabled"
+                    : "Mod\nDisabled"
                 );
         }
 
@@ -266,7 +257,6 @@ namespace APMapMod.UI
             
             UpdateGUI();
             MapText.SetTexts();
-            LookupText.UpdateSelectedPin();
         }
 
         private static void UpdateSpoilers()
@@ -277,8 +267,7 @@ namespace APMapMod.UI
                 );
             _mapControlPanel.GetButton("Spoilers").UpdateText
                 (
-                    APMapMod.LS.SpoilerOn? (Localization.Localize("Spoilers") + ":\n" + Localization.Localize("on"))
-                    : (Localization.Localize("Spoilers") + ":\n" + Localization.Localize("off"))
+                    APMapMod.LS.SpoilerOn? "Spoilers:\non" : "Spoilers:\noff"
                 );
         }
 
@@ -296,23 +285,23 @@ namespace APMapMod.UI
         {
             if (WorldMap.CustomPins == null) return;
 
-            string randomizedText = $"{Localization.Localize("Randomized")}:\n";
+            string randomizedText = $"Randomized:\n";
 
             if (APMapMod.LS.randomizedOn)
             {
                 _mapControlPanel.GetButton("Randomized").SetTextColor(Color.green);
-                randomizedText += Localization.Localize("on");
+                randomizedText += "on";
             }
             else
             {
                 _mapControlPanel.GetButton("Randomized").SetTextColor(Color.white);
-                randomizedText += Localization.Localize("off");
+                randomizedText += "off";
             }
 
             if (WorldMap.CustomPins.IsRandomizedCustom())
             {
                 _mapControlPanel.GetButton("Randomized").SetTextColor(Color.yellow);
-                randomizedText += $" ({Localization.Localize("custom")})";
+                randomizedText += $" (custom)";
             }
 
             _mapControlPanel.GetButton("Randomized").UpdateText(randomizedText);
@@ -332,23 +321,23 @@ namespace APMapMod.UI
         {
             if (WorldMap.CustomPins == null) return;
 
-            string othersText = $"{Localization.Localize("Others")}:\n";
+            string othersText = $"Others:\n";
 
             if (APMapMod.LS.othersOn)
             {
                 _mapControlPanel.GetButton("Others").SetTextColor(Color.green);
-                othersText += Localization.Localize("on");
+                othersText += "on";
             }
             else
             {
                 _mapControlPanel.GetButton("Others").SetTextColor(Color.white);
-                othersText += Localization.Localize("off");
+                othersText += "off";
             }
 
             if (WorldMap.CustomPins.IsOthersCustom())
             {
                 _mapControlPanel.GetButton("Others").SetTextColor(Color.yellow);
-                othersText += $" ({Localization.Localize("custom")})";
+                othersText += $" (custom)";
             }
 
             _mapControlPanel.GetButton("Others").UpdateText(othersText);
@@ -365,24 +354,24 @@ namespace APMapMod.UI
 
         private static void UpdateStyle()
         {
-            string styleText = $"{Localization.Localize("Pin Style")}:\n";
+            string styleText = $"Pin Style:\n";
 
             switch (APMapMod.GS.pinStyle)
             {
                 case PinStyle.Normal:
-                    styleText += Localization.Localize("normal");
+                    styleText += "normal";
                     break;
 
                 case PinStyle.Q_Marks_1:
-                    styleText += $"{Localization.Localize("q marks")} 1";
+                    styleText += $"q marks 1";
                     break;
 
                 case PinStyle.Q_Marks_2:
-                    styleText += $"{Localization.Localize("q marks")} 2";
+                    styleText += $"q marks 2";
                     break;
 
                 case PinStyle.Q_Marks_3:
-                    styleText += $"{Localization.Localize("q marks")} 3";
+                    styleText += $"q marks 3";
                     break;
             }
 
@@ -400,29 +389,24 @@ namespace APMapMod.UI
 
             UpdateGUI();
             MapText.SetTexts();
-
-            if (APMapMod.LS.lookupOn)
-            {
-                LookupText.UpdateSelectedPin();
-            }
         }
 
         private static void UpdateSize()
         {
-            string sizeText = $"{Localization.Localize("Pin Size")}:\n";
+            string sizeText = $"Pin Size:\n";
 
             switch (APMapMod.GS.pinSize)
             {
                 case PinSize.Small:
-                    sizeText += Localization.Localize("small");
+                    sizeText += "small";
                     break;
 
                 case PinSize.Medium:
-                    sizeText += Localization.Localize("medium");
+                    sizeText += "medium";
                     break;
 
                 case PinSize.Large:
-                    sizeText += Localization.Localize("large");
+                    sizeText += "large";
                     break;
             }
 
@@ -431,16 +415,6 @@ namespace APMapMod.UI
 
         public static void ModeClicked(string buttonName)
         {
-            if (GameManager.instance.gameMap != null
-                && (RandomizerMod.RandomizerMod.RS.GenerationSettings.TransitionSettings.Mode == RandomizerMod.Settings.TransitionSettings.TransitionMode.RoomRandomizer
-                    && APMapMod.LS.mapMode == MapMode.TransitionRando)
-                || ((RandomizerMod.RandomizerMod.RS.GenerationSettings.TransitionSettings.Mode == RandomizerMod.Settings.TransitionSettings.TransitionMode.FullAreaRandomizer
-                        || RandomizerMod.RandomizerMod.RS.GenerationSettings.TransitionSettings.Mode == RandomizerMod.Settings.TransitionSettings.TransitionMode.MapAreaRandomizer)
-                    && APMapMod.LS.mapMode == MapMode.TransitionRandoAlt))
-            {
-                Transition.ResetMapColors(GameManager.instance.gameMap);
-            }
-
             APMapMod.LS.ToggleFullMap();
 
             UpdateGUI();
@@ -449,33 +423,23 @@ namespace APMapMod.UI
 
         private static void UpdateMode()
         {
-            string modeText = $"{Localization.Localize("Mode")}:\n";
+            string modeText = $"Mode:\n";
 
             switch (APMapMod.LS.mapMode)
             {
                 case MapMode.FullMap:
                     _mapControlPanel.GetButton("Mode").SetTextColor(Color.green);
-                    modeText += Localization.Localize("Full Map");
+                    modeText += "Full Map";
                     break;
 
                 case MapMode.AllPins:
                     _mapControlPanel.GetButton("Mode").SetTextColor(Color.white);
-                    modeText += Localization.Localize("All Pins");
+                    modeText += "All Pins";
                     break;
 
                 case MapMode.PinsOverMap:
                     _mapControlPanel.GetButton("Mode").SetTextColor(Color.white);
-                    modeText += Localization.Localize("Pins Over Map");
-                    break;
-
-                case MapMode.TransitionRando:
-                    _mapControlPanel.GetButton("Mode").SetTextColor(Color.cyan);
-                    modeText += Localization.Localize("Transition");
-                    break;
-
-                case MapMode.TransitionRandoAlt:
-                    _mapControlPanel.GetButton("Mode").SetTextColor(Color.cyan);
-                    modeText += Localization.Localize("Transition") + " 2";
+                    modeText += "Pins Over Map";
                     break;
             }
 
@@ -510,15 +474,6 @@ namespace APMapMod.UI
         private static void UpdatePool(string poolGroup)
         {
             if (WorldMap.CustomPins == null) return;
-
-            if (poolGroup == "Geo Rocks" && !RandomizerMod.RandomizerMod.RS.GenerationSettings.PoolSettings.GeoRocks)
-            {
-                _mapControlPanel.GetPanel("PoolsPanel").GetButton(poolGroup).UpdateText
-                    (
-                        $"{Localization.Localize("Geo Rocks")}:\n"
-                        + APMapMod.LS.GeoRockCounter + " / " + "207"
-                    );
-            }
 
             switch (APMapMod.LS.GetPoolGroupSetting(poolGroup))
             {
@@ -572,11 +527,11 @@ namespace APMapMod.UI
             switch (APMapMod.LS.groupBy)
             {
                 case GroupBy.Location:
-                    _mapControlPanel.GetPanel("PoolsPanel").GetButton("GroupBy").UpdateText($"{Localization.Localize("Group by")}:\n{Localization.Localize("Location")}");
+                    _mapControlPanel.GetPanel("PoolsPanel").GetButton("GroupBy").UpdateText("Group by:\nLocation");
                     break;
 
                 case GroupBy.Item:
-                    _mapControlPanel.GetPanel("PoolsPanel").GetButton("GroupBy").UpdateText($"{Localization.Localize("Group by")}:\n{Localization.Localize("Item")}");
+                    _mapControlPanel.GetPanel("PoolsPanel").GetButton("GroupBy").UpdateText("Group by:\nItem");
                     break;
             }
         }
@@ -592,12 +547,12 @@ namespace APMapMod.UI
         {
             if (APMapMod.GS.persistentOn)
             {
-                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").UpdateText($"{Localization.Localize("Persistent items")}: {Localization.Localize("On")}");
+                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").UpdateText($"Persistent items: On");
                 _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").SetTextColor(Color.green);
             }
             else
             {
-                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").UpdateText($"{Localization.Localize("Persistent items")}: {Localization.Localize("Off")}");
+                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").UpdateText($"Persistent items: Off");
                 _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").SetTextColor(Color.white);
             }
         }

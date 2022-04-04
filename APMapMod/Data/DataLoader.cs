@@ -2,9 +2,6 @@
 using ConnectionMetadataInjector.Util;
 using GlobalEnums;
 using ItemChanger;
-using RandomizerCore;
-using RandomizerMod.IC;
-using RandomizerMod.RC;
 using System.Collections.Generic;
 using System.Linq;
 using CMI = ConnectionMetadataInjector.ConnectionMetadataInjector;
@@ -18,7 +15,6 @@ namespace APMapMod.Data
         private static Dictionary<string, string> _pinScenes;
         private static Dictionary<string, MapZone> _fixedMapZones;
         private static readonly Dictionary<string, PinDef> _usedPins = new();
-        private static Dictionary<string, string> _logicLookup = new();
 
         public static List<string> usedPoolGroups = new();
 
@@ -90,21 +86,6 @@ namespace APMapMod.Data
             return default;
         }
 
-        public static bool IsInLogicLookup(string locationName)
-        {
-            return _logicLookup.ContainsKey(locationName);
-        }
-
-        public static string GetRawLogic(string locationName)
-        {
-            if (_logicLookup.TryGetValue(locationName, out string logic))
-            {
-                return logic;
-            }
-
-            return default;
-        }
-
         // Next five helper functions are based on BadMagic100's Rando4Stats RandoExtensions
         // MIT License
 
@@ -119,60 +100,60 @@ namespace APMapMod.Data
 
         // The above copyright notice and this permission notice shall be included in all
         // copies or substantial portions of the Software.
-        public static ItemPlacement RandoPlacement(this AbstractItem item)
-        {
-            if (item.GetTag(out RandoItemTag tag))
-            {
-                return RandomizerMod.RandomizerMod.RS.Context.itemPlacements[tag.id];
-            }
-            return default;
-        }
+        //public static ItemPlacement RandoPlacement(this AbstractItem item)
+        //{
+        //    if (item.GetTag(out RandoItemTag tag))
+        //    {
+        //        return RandomizerMod.RandomizerMod.RS.Context.itemPlacements[tag.id];
+        //    }
+        //    return default;
+        //}
 
-        public static string RandoItemName(this AbstractItem item)
-        {
-            return item.RandoPlacement().Item.Name ?? "";
-        }
+        //public static string RandoItemName(this AbstractItem item)
+        //{
+        //    return item.RandoPlacement().Item.Name ?? "";
+        //}
 
-        public static string RandoLocationName(this AbstractItem item)
-        {
-            return item.RandoPlacement().Location.Name ?? "";
-        }
+        //public static string RandoLocationName(this AbstractItem item)
+        //{
+        //    return item.RandoPlacement().Location.Name ?? "";
+        //}
 
-        public static int RandoItemId(this AbstractItem item)
-        {
-            if (item.GetTag(out RandoItemTag tag))
-            {
-                return tag.id;
-            }
-            return default;
-        }
+        //public static int RandoItemId(this AbstractItem item)
+        //{
+        //    if (item.GetTag(out RandoItemTag tag))
+        //    {
+        //        return tag.id;
+        //    }
+        //    return default;
+        //}
 
-        public static bool IsPersistent(this AbstractItem item)
-        {
-            return item.HasTag<ItemChanger.Tags.PersistentItemTag>();
-        }
+        //public static bool IsPersistent(this AbstractItem item)
+        //{
+        //    return item.HasTag<ItemChanger.Tags.PersistentItemTag>();
+        //}
 
-        public static bool CanPreviewItem(this AbstractPlacement placement)
-        {
-            return !placement.HasTag<ItemChanger.Tags.DisableItemPreviewTag>();
-        }
+        //public static bool CanPreviewItem(this AbstractPlacement placement)
+        //{
+        //    return !placement.HasTag<ItemChanger.Tags.DisableItemPreviewTag>();
+        //}
 
-        public static string[] GetPreviewText(string abstractPlacementName)
-        {
-            if (!ItemChanger.Internal.Ref.Settings.Placements.TryGetValue(abstractPlacementName, out AbstractPlacement placement)) return default;
+        //public static string[] GetPreviewText(string abstractPlacementName)
+        //{
+        //    if (!ItemChanger.Internal.Ref.Settings.Placements.TryGetValue(abstractPlacementName, out AbstractPlacement placement)) return default;
 
-            if (placement.GetTag(out ItemChanger.Tags.MultiPreviewRecordTag multiTag))
-            {
-                return multiTag.previewTexts;
-            }
+        //    if (placement.GetTag(out ItemChanger.Tags.MultiPreviewRecordTag multiTag))
+        //    {
+        //        return multiTag.previewTexts;
+        //    }
 
-            if (placement.GetTag(out ItemChanger.Tags.PreviewRecordTag tag))
-            {
-                return new[] { tag.previewText };
-            }
+        //    if (placement.GetTag(out ItemChanger.Tags.PreviewRecordTag tag))
+        //    {
+        //        return new[] { tag.previewText };
+        //    }
 
-            return default;
-        }
+        //    return default;
+        //}
 
         public static bool HasObtainedVanillaItem(PinDef pd)
         {
@@ -190,106 +171,106 @@ namespace APMapMod.Data
             usedPoolGroups.Clear();
             HashSet<string> unsortedGroups = new();
 
-            // Randomized placements
-            foreach (KeyValuePair<string, AbstractPlacement> placement in ItemChanger.Internal.Ref.Settings.Placements)
-            {
-                if (placement.Value.Items.Any(i => !i.HasTag<RandoItemTag>())) continue;
+            //// Randomized placements
+            //foreach (KeyValuePair<string, AbstractPlacement> placement in ItemChanger.Internal.Ref.Settings.Placements)
+            //{
+            //    if (placement.Value.Items.Any(i => !i.HasTag<RandoItemTag>())) continue;
 
-                IEnumerable<ItemDef> items = placement.Value.Items
-                    .Where(x => !x.IsObtained() || x.IsPersistent())
-                    .Select(x => new ItemDef(x));
+            //    IEnumerable<ItemDef> items = placement.Value.Items
+            //        .Where(x => !x.IsObtained() || x.IsPersistent())
+            //        .Select(x => new ItemDef(x));
 
-                if (!items.Any()) continue;
+            //    if (!items.Any()) continue;
 
-                RandoModLocation rml = placement.Value.RandoLocation();
+            //    RandoModLocation rml = placement.Value.RandoLocation();
 
-                if (rml == null || rml.Name == "Start") continue;
+            //    if (rml == null || rml.Name == "Start") continue;
 
-                if (!_allPins.TryGetValue(rml.Name, out PinDef pd))
-                {
-                    pd = new();
+            //    if (!_allPins.TryGetValue(rml.Name, out PinDef pd))
+            //    {
+            //        pd = new();
 
-                    APMapMod.Instance.Log("Unknown placement. Making a 'best guess' for the placement");
-                }
+            //        APMapMod.Instance.Log("Unknown placement. Making a 'best guess' for the placement");
+            //    }
 
-                pd.name = rml.Name;
-                pd.sceneName = rml.LocationDef.SceneName;
+            //    pd.name = rml.Name;
+            //    pd.sceneName = rml.LocationDef.SceneName;
                 
-                if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
-                {
-                    pd.sceneName = "Room_Colosseum_01";
-                }
+            //    if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
+            //    {
+            //        pd.sceneName = "Room_Colosseum_01";
+            //    }
 
-                if (_pinScenes.ContainsKey(pd.sceneName))
-                {
-                    pd.pinScene = _pinScenes[pd.sceneName];
-                }
+            //    if (_pinScenes.ContainsKey(pd.sceneName))
+            //    {
+            //        pd.pinScene = _pinScenes[pd.sceneName];
+            //    }
 
-                pd.mapZone = StringUtils.ToMapZone(RandomizerMod.RandomizerData.Data.GetRoomDef(pd.pinScene ?? pd.sceneName).MapArea);
+            //    pd.mapZone = StringUtils.ToMapZone(RandomizerMod.RandomizerData.Data.GetRoomDef(pd.pinScene ?? pd.sceneName).MapArea);
 
-                pd.randomized = true;
-                pd.randoItems = items;
-                pd.canPreviewItem = placement.Value.CanPreviewItem();
+            //    pd.randomized = true;
+            //    pd.randoItems = items;
+            //    pd.canPreviewItem = placement.Value.CanPreviewItem();
 
-                // UpdatePins will set it to the correct state
-                pd.pinLocationState = PinLocationState.UncheckedUnreachable;
-                pd.locationPoolGroup = SupplementalMetadata.OfPlacementAndLocations(placement.Value).Get(CMI.LocationPoolGroup);
+            //    // UpdatePins will set it to the correct state
+            //    pd.pinLocationState = PinLocationState.UncheckedUnreachable;
+            //    pd.locationPoolGroup = SupplementalMetadata.OfPlacementAndLocations(placement.Value).Get(CMI.LocationPoolGroup);
 
-                _usedPins.Add(rml.Name, pd);
+            //    _usedPins.Add(rml.Name, pd);
 
-                unsortedGroups.Add(pd.locationPoolGroup);
+            //    unsortedGroups.Add(pd.locationPoolGroup);
 
-                foreach(ItemDef i in pd.randoItems)
-                {
-                    unsortedGroups.Add(i.poolGroup);
-                }
+            //    foreach(ItemDef i in pd.randoItems)
+            //    {
+            //        unsortedGroups.Add(i.poolGroup);
+            //    }
 
-                //APMapMod.Instance.Log(locationName);
-                //APMapMod.Instance.Log(pinDef.locationPoolGroup);
-            }
+            //    //APMapMod.Instance.Log(locationName);
+            //    //APMapMod.Instance.Log(pinDef.locationPoolGroup);
+            //}
             
-            // Vanilla placements
-            foreach (GeneralizedPlacement placement in RandomizerMod.RandomizerMod.RS.Context.Vanilla)
-            {
-                if (RandomizerMod.RandomizerData.Data.IsLocation(placement.Location.Name)
-                    && !RandomizerMod.RandomizerMod.RS.TrackerData.clearedLocations.Contains(placement.Location.Name)
-                    && placement.Location.Name != "Start"
-                    && placement.Location.Name != "Iselda"
-                    && _allPins.ContainsKey(placement.Location.Name)
-                    && !_usedPins.ContainsKey(placement.Location.Name))
-                {
-                    PinDef pd = _allPins[placement.Location.Name];
+            //// Vanilla placements
+            //foreach (GeneralizedPlacement placement in RandomizerMod.RandomizerMod.RS.Context.Vanilla)
+            //{
+            //    if (RandomizerMod.RandomizerData.Data.IsLocation(placement.Location.Name)
+            //        && !RandomizerMod.RandomizerMod.RS.TrackerData.clearedLocations.Contains(placement.Location.Name)
+            //        && placement.Location.Name != "Start"
+            //        && placement.Location.Name != "Iselda"
+            //        && _allPins.ContainsKey(placement.Location.Name)
+            //        && !_usedPins.ContainsKey(placement.Location.Name))
+            //    {
+            //        PinDef pd = _allPins[placement.Location.Name];
 
-                    pd.name = placement.Location.Name;
-                    pd.sceneName = RandomizerMod.RandomizerData.Data.GetLocationDef(placement.Location.Name).SceneName;
+            //        pd.name = placement.Location.Name;
+            //        pd.sceneName = RandomizerMod.RandomizerData.Data.GetLocationDef(placement.Location.Name).SceneName;
 
-                    if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
-                    {
-                        pd.sceneName = "Room_Colosseum_01";
-                    }
+            //        if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
+            //        {
+            //            pd.sceneName = "Room_Colosseum_01";
+            //        }
 
-                    if (_pinScenes.ContainsKey(pd.sceneName))
-                    {
-                        pd.pinScene = _pinScenes[pd.sceneName];
-                    }
+            //        if (_pinScenes.ContainsKey(pd.sceneName))
+            //        {
+            //            pd.pinScene = _pinScenes[pd.sceneName];
+            //        }
 
-                    pd.mapZone = StringUtils.ToMapZone(RandomizerMod.RandomizerData.Data.GetRoomDef(pd.pinScene ?? pd.sceneName).MapArea);
+            //        pd.mapZone = StringUtils.ToMapZone(RandomizerMod.RandomizerData.Data.GetRoomDef(pd.pinScene ?? pd.sceneName).MapArea);
 
-                    if (!HasObtainedVanillaItem(pd))
-                    {
-                        pd.randomized = false;
+            //        if (!HasObtainedVanillaItem(pd))
+            //        {
+            //            pd.randomized = false;
 
-                        pd.pinLocationState = PinLocationState.NonRandomizedUnchecked;
-                        pd.locationPoolGroup = SubcategoryFinder.GetLocationPoolGroup(placement.Location.Name).FriendlyName();
+            //            pd.pinLocationState = PinLocationState.NonRandomizedUnchecked;
+            //            pd.locationPoolGroup = SubcategoryFinder.GetLocationPoolGroup(placement.Location.Name).FriendlyName();
 
-                        _usedPins.Add(placement.Location.Name, pd);
+            //            _usedPins.Add(placement.Location.Name, pd);
 
-                        unsortedGroups.Add(pd.locationPoolGroup);
+            //            unsortedGroups.Add(pd.locationPoolGroup);
 
-                        //APMapMod.Instance.Log(placement.Location.Name);
-                    }
-                }
-            }
+            //            //APMapMod.Instance.Log(placement.Location.Name);
+            //        }
+            //    }
+            //}
 
             // Sort all the PoolGroups that have been used
             foreach (string poolGroup in sortedKnownGroups)
@@ -337,11 +318,6 @@ namespace APMapMod.Data
                 _usedPins.Remove("Dirtmouth_Stag");
                 _usedPins.Remove("Resting_Grounds_Stag");
             }
-        }
-
-        public static void SetLogicLookup()
-        {
-            _logicLookup = RandomizerMod.RandomizerMod.RS.TrackerData.lm.LogicLookup.Values.ToDictionary(l => l.Name, l => l.ToInfix());
         }
 
         public static void Load()

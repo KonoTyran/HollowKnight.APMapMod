@@ -71,36 +71,6 @@ namespace APMapMod.UI
             DontDestroyOnLoad(_mapCanvas);
 
             _mapCanvas.SetActive(false);
-
-            _transitionCanvas = new GameObject();
-            _transitionCanvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            CanvasScaler transitionScaler = _transitionCanvas.AddComponent<CanvasScaler>();
-            transitionScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            transitionScaler.referenceResolution = new Vector2(1920f, 1080f);
-
-            TransitionText.BuildText(_transitionCanvas);
-
-            DontDestroyOnLoad(_transitionCanvas);
-
-            _transitionCanvas.SetActive(true);
-
-            TransitionText.Initialize();
-            StartCoroutine("UpdateSelectedScene");
-
-            _lookupCanvas = new GameObject();
-            _lookupCanvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            CanvasScaler lookupScaler = _lookupCanvas.AddComponent<CanvasScaler>();
-            lookupScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            lookupScaler.referenceResolution = new Vector2(1920f, 1080f);
-
-            LookupText.BuildText(_lookupCanvas);
-
-            DontDestroyOnLoad(_lookupCanvas);
-
-            _lookupCanvas.SetActive(false);
-
-            LookupText.Initialize();
-            StartCoroutine("UpdateSelectedPin");
         }
 
         public void Update()
@@ -108,8 +78,6 @@ namespace APMapMod.UI
             try
             {
                 PauseMenu.Update();
-                TransitionText.Update();
-                LookupText.Update();
             }
             catch (Exception e)
             {
@@ -123,7 +91,6 @@ namespace APMapMod.UI
             while (true)
             {
                 yield return new WaitForSecondsRealtime(0.1f);
-                TransitionText.UpdateSelectedScene();
             }
         }
 
@@ -133,7 +100,6 @@ namespace APMapMod.UI
             while (true)
             {
                 yield return new WaitForSecondsRealtime(0.1f);
-                LookupText.UpdateSelectedPinCoroutine();
             }
         }
 

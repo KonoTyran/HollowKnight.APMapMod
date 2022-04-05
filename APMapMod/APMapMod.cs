@@ -16,7 +16,7 @@ namespace APMapMod
     {
         public static APMapMod Instance;
 
-        public override string GetVersion() => "Template";
+        public override string GetVersion() => "v0.1.0";
 
         public override int LoadPriority() => 10;
 

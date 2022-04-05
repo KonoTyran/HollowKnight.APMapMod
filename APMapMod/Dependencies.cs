@@ -20,8 +20,6 @@ namespace APMapMod
         {
             { "AdditionalMaps", null },
             { "Benchwarp", null },
-            { "RandomizableLevers", null },
-            { "RandoPlus", null }
         };
 
         public static void GetDependencies()

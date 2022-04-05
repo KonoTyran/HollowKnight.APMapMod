@@ -44,5 +44,20 @@
   "White_Palace_17": "Abyss_05",
   "White_Palace_18": "Abyss_05",
   "White_Palace_19": "Abyss_05",
-  "White_Palace_20": "Abyss_05"
+  "White_Palace_20": "Abyss_05",
+
+  "Dream_Guardian_Lurien": "Ruins2_Watcher_Room",
+  "Dream_Guardian_Monomon": "Fungus3_47",
+  "Dream_Guardian_Hegemol": "Deepnest_10",
+  "Room_Final_Boss_Atrium": "Crossroads_02",
+  "Dream_Nailcollection": "RestingGrounds_04",
+  "Room_Sly_Storeroom": "Town",
+  "Dream_Abyss": "Abyss_06_Core",
+  "RestingGrounds_02_boss": "RestingGrounds_02",
+  "Cliffs_02_boss": "Cliffs_02",
+  "Fungus3_40_boss": "Fungus3_40",
+  "Ruins1_24_boss_defeated": "Ruins1_24",
+  "Room_Bretta_Basement": "Town",
+  "Room_Colosseum_Bronze": "Deepnest_East_09",
+  "Room_Colosseum_Silver": "Deepnest_East_09"
 }

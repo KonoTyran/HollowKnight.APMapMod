@@ -229,8 +229,8 @@
     <EmbeddedResource Include="Resources\GUI\DropdownBG.png" />
     <EmbeddedResource Include="Resources\GUI\UncheckedBG.png" />
     <EmbeddedResource Include="Resources\GUI\LookupBG.png" />
-    <EmbeddedResource Include="Resources\pins.json" />
     <EmbeddedResource Include="Resources\fixedMapZones.json" />
+    <EmbeddedResource Include="Resources\pins.json" />
     <EmbeddedResource Include="Resources\pinsAM.json" />
     <EmbeddedResource Include="Resources\pinScenes.json" />
     <EmbeddedResource Include="Resources\Pins\pinCharm.png" />

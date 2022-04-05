@@ -191,17 +191,10 @@ namespace APMapMod.Data
                 pd.name = placement.Value.Name;
                 pd.sceneName = Finder.GetLocation(placement.Value.Name).sceneName;
 
-                if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
-                {
-                    pd.sceneName = "Room_Colosseum_01";
-                }
-
                 if (_pinScenes.ContainsKey(pd.sceneName))
                 {
                     pd.pinScene = _pinScenes[pd.sceneName];
                 }
-
-                pd.mapZone = MapZone.NONE;
 
                 pd.randomized = true;
                 pd.randoItems = items;
@@ -283,11 +276,6 @@ namespace APMapMod.Data
             {
                 ApplyAdditionalMapsChanges();
             }
-
-            if (Dependencies.HasDependency("RandomizableLevers"))
-            {
-                ApplyRandomizableLeversChanges();
-            }
         }
 
         public static void ApplyAdditionalMapsChanges()
@@ -301,16 +289,6 @@ namespace APMapMod.Data
                     pinDef.offsetX = pinDefAM.offsetX;
                     pinDef.offsetY = pinDefAM.offsetY;
                 }
-            }
-        }
-
-        public static void ApplyRandomizableLeversChanges()
-        {
-            // This is probably redundant
-            if (_usedPins.Any(p => p.Key.StartsWith("Lever")))
-            {
-                _usedPins.Remove("Dirtmouth_Stag");
-                _usedPins.Remove("Resting_Grounds_Stag");
             }
         }
 

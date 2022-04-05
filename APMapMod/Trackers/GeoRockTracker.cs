@@ -12,14 +12,12 @@ namespace APMapMod.Trackers
 
             On.GeoRock.OnEnable += GeoRock_OnEnable;
             On.GeoRock.SetMyID += GeoRock_SetMyID;
-            ModHooks.AfterSavegameLoadHook += AfterSavegameLoadHook;
         }
 
         public static void Unhook()
         {
             On.GeoRock.OnEnable -= GeoRock_OnEnable;
             On.GeoRock.SetMyID -= GeoRock_SetMyID;
-            ModHooks.AfterSavegameLoadHook -= AfterSavegameLoadHook;
         }
 
         private static void GeoRock_OnEnable(On.GeoRock.orig_OnEnable orig, GeoRock self)
@@ -49,20 +47,6 @@ namespace APMapMod.Trackers
                 if (self.transform.parent != null)
                 {
                     self.geoRockData.id = "_Props/Geo Rock Abyss";
-                }
-            }
-        }
-
-        private static void AfterSavegameLoadHook(SaveGameData self)
-        {
-            // Update Geo Rock counter (vanilla Geo Rocks only)
-            APMapMod.LS.GeoRockCounter = 0;
-
-            foreach (GeoRockData grd in self.sceneData.geoRocks)
-            {
-                if (grd.hitsLeft == 0)
-                {
-                    APMapMod.LS.GeoRockCounter++;
                 }
             }
         }

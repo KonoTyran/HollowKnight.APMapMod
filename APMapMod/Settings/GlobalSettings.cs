@@ -15,57 +15,13 @@
         Q_Marks_3
     }
 
-    public enum RouteTextInGame
-    {
-        Hide,
-        Show,
-        ShowNextTransitionOnly
-    }
-
     public class GlobalSettings
     {
-        public bool allowBenchWarpSearch = true;
-
-        public bool uncheckedPanelActive = false;
-
-        public bool routeCompassEnabled = true;
-
-        public RouteTextInGame routeTextInGame = RouteTextInGame.Hide;
-
         public PinStyle pinStyle = PinStyle.Normal;
 
         public PinSize pinSize = PinSize.Medium;
 
         public bool persistentOn = false;
-
-        public void ToggleAllowBenchWarp()
-        {
-            allowBenchWarpSearch = !allowBenchWarpSearch;
-        }
-
-        public void ToggleUncheckedPanel()
-        {
-            uncheckedPanelActive = !uncheckedPanelActive;
-        }
-
-        public void ToggleRouteCompassEnabled()
-        {
-            routeCompassEnabled = !routeCompassEnabled;
-        }
-
-        public void ToggleRouteTextInGame()
-        {
-            switch (routeTextInGame)
-            {
-                case RouteTextInGame.Hide:
-                case RouteTextInGame.Show:
-                    routeTextInGame += 1;
-                    break;
-                default:
-                    routeTextInGame = RouteTextInGame.Hide;
-                    break;
-            }
-        }
 
         public void TogglePinStyle()
         {

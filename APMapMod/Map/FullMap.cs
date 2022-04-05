@@ -373,6 +373,11 @@ namespace APMapMod.Map
 
         public static bool BoolGetOverride(string boolName, bool orig)
         {
+            if (boolName == "hasMap" || boolName == "MMS_hasMap")
+            {
+                APMapMod.Instance.Log(boolName + " " + orig);
+            }
+
             // Always have a map when the mod is enabled
             if (boolName == "MMS_hasMap" && APMapMod.LS.ModEnabled)
             {

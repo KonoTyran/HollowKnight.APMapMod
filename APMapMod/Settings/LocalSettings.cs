@@ -42,9 +42,6 @@ namespace APMapMod.Settings
     {
         public Dictionary<string, bool> ObtainedVanillaItems = new();
 
-        // Vanilla only
-        public int GeoRockCounter = 0;
-
         public bool showBenchPins = false;
 
         public bool ModEnabled = false;

@@ -13,8 +13,6 @@ namespace APMapMod
         {
             { "Archipelago.HollowKnight", null },
             { "ItemChanger", null },
-            { "MenuChanger", null },
-            { "ConnectionMetadataInjector", null },
             { "Vasi", null }
         };
 

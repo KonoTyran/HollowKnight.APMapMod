@@ -1,6 +1,4 @@
-﻿using ConnectionMetadataInjector;
-using ItemChanger;
-using CMI = ConnectionMetadataInjector.ConnectionMetadataInjector;
+﻿using ItemChanger;
 
 namespace APMapMod.Data
 {
@@ -8,13 +6,10 @@ namespace APMapMod.Data
     {
         public ItemDef(AbstractItem item)
         {
-            //id = item.RandoItemId();
-            //itemName = item.RandoItemName();
-            //poolGroup = SupplementalMetadata.Of(item).Get(CMI.ItemPoolGroup);
-            //persistent = item.IsPersistent();
+            itemName = item.name;
+            poolGroup = "Unknown";
         }
 
-        public int id;
         public string itemName;
         public string poolGroup = "Unknown";
         public bool persistent = false;

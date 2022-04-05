@@ -371,16 +371,8 @@
         <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Assembly-CSharp.dll</HintPath>
         <CopyLocal>False</CopyLocal>
       </Reference>
-      <Reference Include="ConnectionMetadataInjector">
-        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\ConnectionMetadataInjector\ConnectionMetadataInjector.dll</HintPath>
-        <CopyLocal>False</CopyLocal>
-      </Reference>
       <Reference Include="ItemChanger">
         <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\ItemChanger\ItemChanger.dll</HintPath>
-        <CopyLocal>False</CopyLocal>
-      </Reference>
-      <Reference Include="MenuChanger">
-        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\MenuChanger\MenuChanger.dll</HintPath>
         <CopyLocal>False</CopyLocal>
       </Reference>
       <Reference Include="MMHOOK_Assembly-CSharp">

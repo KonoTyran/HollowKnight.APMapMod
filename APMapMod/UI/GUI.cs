@@ -10,8 +10,6 @@ namespace APMapMod.UI
             On.GameMap.Start += GameMap_Start;
             On.GameMap.WorldMap += GameMap_WorldMap;
             On.GameMap.CloseQuickMap += GameMap_CloseQuickMap;
-            On.HeroController.Pause += HeroController_Pause;
-            On.HeroController.UnPause += HeroController_UnPause;
 
             GUIController.Setup();
         }
@@ -21,8 +19,6 @@ namespace APMapMod.UI
             On.GameMap.Start -= GameMap_Start;
             On.GameMap.WorldMap -= GameMap_WorldMap;
             On.GameMap.CloseQuickMap -= GameMap_CloseQuickMap;
-            On.HeroController.Pause -= HeroController_Pause;
-            On.HeroController.UnPause -= HeroController_UnPause;
 
             GUIController.Unload();
         }
@@ -45,16 +41,6 @@ namespace APMapMod.UI
             orig(self);
 
             MapText.Hide();
-        }
-
-        private static void HeroController_Pause(On.HeroController.orig_Pause orig, HeroController self)
-        {
-            orig(self);
-        }
-
-        private static void HeroController_UnPause(On.HeroController.orig_UnPause orig, HeroController self)
-        {
-            orig(self);
         }
     }
 }

@@ -22,8 +22,6 @@ namespace APMapMod.Trackers
                 APMapMod.LS.ObtainedVanillaItems[_grd.id + _grd.sceneName] = true;
             }
 
-            APMapMod.LS.GeoRockCounter ++;
-
             //APMapMod.Instance.Log("Geo Rock broken");
             //APMapMod.Instance.Log(" ID: " + _grd.id);
             //APMapMod.Instance.Log(" Scene: " + _grd.sceneName);

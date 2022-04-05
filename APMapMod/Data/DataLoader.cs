@@ -1,10 +1,7 @@
-﻿using ConnectionMetadataInjector;
-using ConnectionMetadataInjector.Util;
-using GlobalEnums;
+﻿using GlobalEnums;
 using ItemChanger;
 using System.Collections.Generic;
 using System.Linq;
-using CMI = ConnectionMetadataInjector.ConnectionMetadataInjector;
 
 namespace APMapMod.Data
 {
@@ -133,10 +130,10 @@ namespace APMapMod.Data
         //    return item.HasTag<ItemChanger.Tags.PersistentItemTag>();
         //}
 
-        //public static bool CanPreviewItem(this AbstractPlacement placement)
-        //{
-        //    return !placement.HasTag<ItemChanger.Tags.DisableItemPreviewTag>();
-        //}
+        public static bool CanPreviewItem(this AbstractPlacement placement)
+        {
+            return !placement.HasTag<ItemChanger.Tags.DisableItemPreviewTag>();
+        }
 
         //public static string[] GetPreviewText(string abstractPlacementName)
         //{
@@ -173,63 +170,58 @@ namespace APMapMod.Data
 
             // AP INTEGRATION: Add pins from ItemChanger placements properly
 
-            //// Randomized placements
-            //foreach (KeyValuePair<string, AbstractPlacement> placement in ItemChanger.Internal.Ref.Settings.Placements)
-            //{
-            //    if (placement.Value.Items.Any(i => !i.HasTag<RandoItemTag>())) continue;
+            // Randomized placements
+            foreach (KeyValuePair<string, AbstractPlacement> placement in ItemChanger.Internal.Ref.Settings.Placements)
+            {
+                if (placement.Value.Name.Contains("Vanilla") || placement.Value.Name == "Start") continue;
 
-            //    IEnumerable<ItemDef> items = placement.Value.Items
-            //        .Where(x => !x.IsObtained() || x.IsPersistent())
-            //        .Select(x => new ItemDef(x));
+                IEnumerable<ItemDef> items = placement.Value.Items
+                    .Where(x => !x.IsObtained())
+                    .Select(x => new ItemDef(x));
 
-            //    if (!items.Any()) continue;
+                if (!items.Any()) continue;
 
-            //    RandoModLocation rml = placement.Value.RandoLocation();
+                if (!_allPins.TryGetValue(placement.Value.Name, out PinDef pd))
+                {
+                    pd = new();
 
-            //    if (rml == null || rml.Name == "Start") continue;
+                    APMapMod.Instance.Log("Unknown placement. Making a 'best guess' for the placement");
+                }
 
-            //    if (!_allPins.TryGetValue(rml.Name, out PinDef pd))
-            //    {
-            //        pd = new();
+                pd.name = placement.Value.Name;
+                pd.sceneName = Finder.GetLocation(placement.Value.Name).sceneName;
 
-            //        APMapMod.Instance.Log("Unknown placement. Making a 'best guess' for the placement");
-            //    }
+                if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
+                {
+                    pd.sceneName = "Room_Colosseum_01";
+                }
 
-            //    pd.name = rml.Name;
-            //    pd.sceneName = rml.LocationDef.SceneName;
+                if (_pinScenes.ContainsKey(pd.sceneName))
+                {
+                    pd.pinScene = _pinScenes[pd.sceneName];
+                }
 
-            //    if (pd.sceneName == "Room_Colosseum_Bronze" || pd.sceneName == "Room_Colosseum_Silver")
-            //    {
-            //        pd.sceneName = "Room_Colosseum_01";
-            //    }
+                pd.mapZone = MapZone.NONE;
 
-            //    if (_pinScenes.ContainsKey(pd.sceneName))
-            //    {
-            //        pd.pinScene = _pinScenes[pd.sceneName];
-            //    }
+                pd.randomized = true;
+                pd.randoItems = items;
+                pd.canPreviewItem = placement.Value.CanPreviewItem();
 
-            //    pd.mapZone = StringUtils.ToMapZone(RandomizerMod.RandomizerData.Data.GetRoomDef(pd.pinScene ?? pd.sceneName).MapArea);
+                pd.pinLocationState = PinLocationState.UncheckedReachable;
+                pd.locationPoolGroup = "Unknown";
 
-            //    pd.randomized = true;
-            //    pd.randoItems = items;
-            //    pd.canPreviewItem = placement.Value.CanPreviewItem();
+                _usedPins.Add(placement.Value.Name, pd);
 
-            //    // UpdatePins will set it to the correct state
-            //    pd.pinLocationState = PinLocationState.UncheckedUnreachable;
-            //    pd.locationPoolGroup = SupplementalMetadata.OfPlacementAndLocations(placement.Value).Get(CMI.LocationPoolGroup);
+                unsortedGroups.Add(pd.locationPoolGroup);
 
-            //    _usedPins.Add(rml.Name, pd);
+                foreach (ItemDef i in pd.randoItems)
+                {
+                    unsortedGroups.Add(i.poolGroup);
+                }
 
-            //    unsortedGroups.Add(pd.locationPoolGroup);
-
-            //    foreach(ItemDef i in pd.randoItems)
-            //    {
-            //        unsortedGroups.Add(i.poolGroup);
-            //    }
-
-            //    //APMapMod.Instance.Log(locationName);
-            //    //APMapMod.Instance.Log(pinDef.locationPoolGroup);
-            //}
+                //APMapMod.Instance.Log(locationName);
+                //APMapMod.Instance.Log(pinDef.locationPoolGroup);
+            }
 
             //// Vanilla placements
             //foreach (GeneralizedPlacement placement in RandomizerMod.RandomizerMod.RS.Context.Vanilla)

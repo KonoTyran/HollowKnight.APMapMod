@@ -14,6 +14,8 @@ namespace APMapMod.Map
     {
         public static void Hook()
         {
+            ReplaceKnightBools();
+
             On.RoughMapRoom.OnEnable += RoughMapRoom_OnEnable;
             IL.GameMap.WorldMap += ModifyMapBools;
             IL.GameMap.SetupMap += ModifyMapBools;
@@ -152,8 +154,8 @@ namespace APMapMod.Map
                         || areaObj.name == "Map Markers"
                         || areaObj.name == "WHITE_PALACE"
                         || areaObj.name == "GODS_GLORY"
-                        || areaObj.name == "MMS Custom Pin Group"
-                        || areaObj.name == "MMS Custom Map Rooms") continue;
+                        || areaObj.name == "AMM Custom Pin Group"
+                        || areaObj.name == "AMM Custom Map Rooms") continue;
 
                 foreach (Transform roomObj in areaObj.transform)
                 {
@@ -201,7 +203,7 @@ namespace APMapMod.Map
             orig(self);
         }
 
-        // Adds the prefix "MMS_" to each boolName occurrence directly in the original code
+        // Adds the prefix "AMM_" to each boolName occurrence directly in the original code
         private static void ModifyMapBools(ILContext il)
         {
             ILCursor cursor = new(il);
@@ -227,15 +229,15 @@ namespace APMapMod.Map
             {
                 string name = cursor.ToString().Split('\"')[1];
                 cursor.Remove();
-                cursor.Emit(OpCodes.Ldstr, "MMS_" + name);
+                cursor.Emit(OpCodes.Ldstr, "AMM_" + name);
             }
         }
 
-        // This method adds the prefix "MMS_" to each boolName, so that we can control it in BoolGetOverride
+        // This method adds the prefix "AMM_" to each boolName, so that we can control it in BoolGetOverride
         public static void ReplaceBool(PlayMakerFSM fsm, string stateName, int index)
         {
             string boolString = FsmUtil.GetAction<PlayerDataBoolTest>(fsm, stateName, index).boolName.ToString();
-            FsmUtil.GetAction<PlayerDataBoolTest>(fsm, stateName, index).boolName = "MMS_" + boolString;
+            FsmUtil.GetAction<PlayerDataBoolTest>(fsm, stateName, index).boolName = "AMM_" + boolString;
         }
 
         public static void ReplaceNumberOfBools(PlayMakerFSM fsm, string stateName, int number)
@@ -246,15 +248,27 @@ namespace APMapMod.Map
             }
         }
 
+        // Fixing some weird race condition issue where the hook below isn't added in time
+        private static void ReplaceKnightBools()
+        {
+            if (HeroController.instance.gameObject != null)
+            {
+                PlayMakerFSM self = HeroController.instance.gameObject.LocateMyFSM("Map Control");
+
+                ReplaceBool(self, "Button Down Check", 1);
+                FsmUtil.GetAction<GetPlayerDataBool>(self, "Has Map?", 3).boolName = "AMM_hasMap";
+            }
+        }
+
         private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
         {
             orig(self);
 
-            // Replace all instances of "hasMap" with "MMS_hasMap"
+            // Replace all instances of "hasMap" with "AMM_hasMap"
             if (self.gameObject.name == "Knight" && self.FsmName == "Map Control")
             {
                 ReplaceBool(self, "Button Down Check", 1);
-                FsmUtil.GetAction<GetPlayerDataBool>(self, "Has Map?", 3).boolName = "MMS_hasMap";
+                FsmUtil.GetAction<GetPlayerDataBool>(self, "Has Map?", 3).boolName = "AMM_hasMap";
             }
             else if (self.gameObject.name == "Inventory" && self.FsmName == "Inventory Control")
             {
@@ -352,7 +366,7 @@ namespace APMapMod.Map
                             break;
 
                         case "Activate":
-                            FsmString[] boolStrings = { "MMS_visitedHive", "MMS_mapOutskirts" };
+                            FsmString[] boolStrings = { "AMM_visitedHive", "AMM_mapOutskirts" };
                             FsmUtil.GetAction<PlayerDataBoolAllTrue>(self, state.Name, 8).stringVariables = boolStrings;
                             break;
                     }
@@ -367,24 +381,19 @@ namespace APMapMod.Map
 
             else if (self.FsmName == "Bench Control")
             {
-                FsmUtil.GetAction<GetPlayerDataBool>(self, "Open Map", 0).boolName = "MMS_hasMap";
+                FsmUtil.GetAction<GetPlayerDataBool>(self, "Open Map", 0).boolName = "AMM_hasMap";
             }
         }
 
         public static bool BoolGetOverride(string boolName, bool orig)
         {
-            if (boolName == "hasMap" || boolName == "MMS_hasMap")
-            {
-                APMapMod.Instance.Log(boolName + " " + orig);
-            }
-
             // Always have a map when the mod is enabled
-            if (boolName == "MMS_hasMap" && APMapMod.LS.ModEnabled)
+            if (boolName == "AMM_hasMap" && APMapMod.LS.ModEnabled)
             {
                 return true;
             }
 
-            if (boolName.StartsWith("MMS_"))
+            if (boolName.StartsWith("AMM_"))
             {
                 if (APMapMod.LS.ModEnabled &&
                     APMapMod.LS.mapMode == MapMode.FullMap)

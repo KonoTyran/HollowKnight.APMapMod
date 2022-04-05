@@ -32,7 +32,7 @@ namespace APMapMod.Map
         public static void ReplaceBoolX(PlayMakerFSM fsm, string stateName, int index)
         {
             string boolString = FsmUtil.GetAction<PlayerDataBoolTest>(fsm, stateName, index).boolName.ToString();
-            FsmUtil.GetAction<PlayerDataBoolTest>(fsm, stateName, index).boolName = "MMSX" + boolString;
+            FsmUtil.GetAction<PlayerDataBoolTest>(fsm, stateName, index).boolName = "AMMX" + boolString;
         }
 
         // Replace all PlayerData boolNames with our own so we can force disable all pins,
@@ -248,7 +248,7 @@ namespace APMapMod.Map
                 return false;
             }
 
-            if (boolName.StartsWith("MMSX"))
+            if (boolName.StartsWith("AMMX"))
             {
                 if (APMapMod.LS.ModEnabled)
                 {

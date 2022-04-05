@@ -72,7 +72,7 @@ namespace APMapMod.Map
 
             APMapMod.Instance.Log("Adding Custom Pins...");
 
-            goCustomPins = new GameObject($"MMS Custom Pin Group");
+            goCustomPins = new GameObject($"AMM Custom Pin Group");
             goCustomPins.AddComponent<PinsCustom>();
 
             // Setting parent here is only for controlling local position,

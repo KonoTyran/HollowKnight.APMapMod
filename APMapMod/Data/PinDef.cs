@@ -1,4 +1,5 @@
 ﻿using GlobalEnums;
+using ItemChanger;
 using System.Collections.Generic;
 
 namespace APMapMod.Data
@@ -33,7 +34,7 @@ namespace APMapMod.Data
 
         public bool randomized;
 
-        public IEnumerable<ItemDef> randoItems;
+        public IEnumerable<AbstractItem> randoItems;
         public bool canPreviewItem;
         public PinLocationState pinLocationState;
 

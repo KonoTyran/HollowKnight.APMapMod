@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using ItemChanger;
 
 namespace APMapMod.Map
 {
@@ -134,8 +135,7 @@ namespace APMapMod.Map
                     pin.PD.canShowOnMap = false;
                 }
 
-                if (pd.pinLocationState == PinLocationState.Cleared
-                    || pd.pinLocationState == PinLocationState.ClearedPersistent && !APMapMod.GS.persistentOn)
+                if (pd.pinLocationState == PinLocationState.Cleared)
                 {
                     pin.PD.canShowOnMap = false;
                 }
@@ -158,23 +158,22 @@ namespace APMapMod.Map
 
             // AP INTEGRATION: Check if item is obtained, probably via ItemChanger
 
-            //// Remove obtained rando items from list
-            //if (pd.randoItems != null && pd.randoItems.Any())
-            //{
-            //    List<ItemDef> newRandoItems = new();
 
-            //    foreach (ItemDef item in pd.randoItems)
-            //    {
-            //        if ((!RandomizerMod.RandomizerMod.RS.TrackerData.obtainedItems.Contains(item.id)
-            //            && !RandomizerMod.RandomizerMod.RS.TrackerData.outOfLogicObtainedItems.Contains(item.id))
-            //            || item.persistent)
-            //        {
-            //            newRandoItems.Add(item);
-            //        }
-            //    }
+            // Remove obtained rando items from list
+            if (pd.randoItems != null && pd.randoItems.Any())
+            {
+                List<AbstractItem> newRandoItems = new();
 
-            //    pd.randoItems = newRandoItems;
-            //}
+                foreach (AbstractItem item in pd.randoItems)
+                {
+                    if (!item.IsObtained())
+                    {
+                        newRandoItems.Add(item);
+                    }
+                }
+
+                pd.randoItems = newRandoItems;
+            }
 
             //// Check if reachable
             //if (RandomizerMod.RandomizerMod.RS.TrackerData.uncheckedReachableLocations.Contains(pd.name))
@@ -195,18 +194,12 @@ namespace APMapMod.Map
             //    pd.pinLocationState = PinLocationState.Previewed;
             //}
 
-            //// Check if cleared
-            //if (RandomizerMod.RandomizerMod.RS.TrackerData.clearedLocations.Contains(pd.name))
-            //{
-            //    if (pd.randoItems != null && pd.randoItems.Any(i => i.persistent))
-            //    {
-            //        pd.pinLocationState = PinLocationState.ClearedPersistent;
-            //    }
-            //    else
-            //    {
-            //        pd.pinLocationState = PinLocationState.Cleared;
-            //    }
-            //}
+            // Check if cleared
+
+            if (pd.randoItems == null || !pd.randoItems.Any())
+            {
+                pd.pinLocationState = PinLocationState.Cleared;
+            }
         }
 
         // Called every time when any relevant setting is changed, or when the Map is opened
@@ -220,29 +213,7 @@ namespace APMapMod.Map
                     continue;
                 }
 
-                string targetPoolGroup = "";
-
-                // Custom pool setting control
-                if (APMapMod.LS.groupBy == GroupBy.Location)
-                {
-                    targetPoolGroup = pin.PD.locationPoolGroup;
-                }
-                
-                if (APMapMod.LS.groupBy == GroupBy.Item)
-                {
-                    targetPoolGroup = GetActiveRandoItemGroup(pin.PD);
-
-                    if (targetPoolGroup == "" && !pin.PD.randomized)
-                    {
-                        targetPoolGroup = pin.PD.locationPoolGroup;
-                    }
-                    // All of the corresponding item groups for that location are off
-                    else if (targetPoolGroup == "" && pin.PD.randomized)
-                    {
-                        pin.gameObject.SetActive(false);
-                        continue;
-                    }
-                }
+                string targetPoolGroup = pin.PD.locationPoolGroup;
 
                 switch (APMapMod.LS.GetPoolGroupSetting(targetPoolGroup))
                 {
@@ -260,34 +231,34 @@ namespace APMapMod.Map
             }
         }
 
-        private string GetActiveRandoItemGroup(PinDef pd)
-        {
-            if (pd.randomized && pd.randoItems != null && pd.randoItems.Any())
-            {
-                ItemDef item = pd.randoItems.FirstOrDefault(i => APMapMod.LS.GetPoolGroupSetting(i.poolGroup) == PoolGroupState.On
-                    || (APMapMod.LS.GetPoolGroupSetting(i.poolGroup) == PoolGroupState.Mixed && (APMapMod.LS.randomizedOn || APMapMod.LS.othersOn)));
+        //private string GetActiveRandoItemGroup(PinDef pd)
+        //{
+        //    if (pd.randomized && pd.randoItems != null && pd.randoItems.Any())
+        //    {
+        //        ItemDef item = pd.randoItems.FirstOrDefault(i => APMapMod.LS.GetPoolGroupSetting(i.poolGroup) == PoolGroupState.On
+        //            || (APMapMod.LS.GetPoolGroupSetting(i.poolGroup) == PoolGroupState.Mixed && (APMapMod.LS.randomizedOn || APMapMod.LS.othersOn)));
 
-                if (item != null)
-                {
-                    return item.poolGroup;
-                }
-            }
-            return "";
-        }
+        //        if (item != null)
+        //        {
+        //            return item.poolGroup;
+        //        }
+        //    }
+        //    return "";
+        //}
 
-        private bool HasRandoItemGroup(PinDef pd, string poolGroup)
-        {
-            if (pd.randomized && pd.randoItems != null && pd.randoItems.Any())
-            {
-                ItemDef item = pd.randoItems.FirstOrDefault(i => i.poolGroup == poolGroup);
+        //private bool HasRandoItemGroup(PinDef pd, string poolGroup)
+        //{
+        //    if (pd.randomized && pd.randoItems != null && pd.randoItems.Any())
+        //    {
+        //        ItemDef item = pd.randoItems.FirstOrDefault(i => i.poolGroup == poolGroup);
 
-                if (item != null)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        //        if (item != null)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
         public void ResetPoolSettings()
         {
@@ -296,29 +267,14 @@ namespace APMapMod.Map
                 bool hasRandomized = false;
                 bool hasOthers = false;
 
-                if (APMapMod.LS.groupBy == GroupBy.Location)
+                if (_pins.Where(p => p.PD.locationPoolGroup == group).Any(p => p.PD.randomized))
                 {
-                    if (_pins.Where(p => p.PD.locationPoolGroup == group).Any(p => p.PD.randomized))
-                    {
-                        hasRandomized = true;
-                    }
-
-                    if (_pins.Where(p => p.PD.locationPoolGroup == group).Any(p => !p.PD.randomized))
-                    {
-                        hasOthers = true;
-                    }
+                    hasRandomized = true;
                 }
-                else if (APMapMod.LS.groupBy == GroupBy.Item)
-                {
-                    if (_pins.Any(p => HasRandoItemGroup(p.PD, group)))
-                    {
-                        hasRandomized = true;
-                    }
 
-                    if (_pins.Where(p => p.PD.locationPoolGroup == group).Any(p => !p.PD.randomized))
-                    {
-                        hasOthers = true;
-                    }
+                if (_pins.Where(p => p.PD.locationPoolGroup == group).Any(p => !p.PD.randomized))
+                {
+                    hasOthers = true;
                 }
 
                 if (hasRandomized == true && hasOthers == false)
@@ -370,14 +326,7 @@ namespace APMapMod.Map
 
         public void GetRandomizedOthersGroups()
         {
-            if (APMapMod.LS.groupBy == GroupBy.Location)
-            {
-                randomizedGroups = new(_pins.Where(p => p.PD.randomized).Select(p => p.PD.locationPoolGroup));
-            }
-            else if (APMapMod.LS.groupBy == GroupBy.Item)
-            {
-                randomizedGroups = new(_pins.Where(p => p.PD.randomized).SelectMany(p => p.PD.randoItems).Select(i => i.poolGroup));
-            }
+            randomizedGroups = new(_pins.Where(p => p.PD.randomized).Select(p => p.PD.locationPoolGroup));
 
             othersGroups = new(_pins.Where(p => !p.PD.randomized).Select(p => p.PD.locationPoolGroup));
         }

@@ -12,12 +12,6 @@ namespace APMapMod.Settings
         PinsOverMap
     }
 
-    public enum GroupBy
-    {
-        Location,
-        Item
-    }
-
     public enum PoolGroupState
     {
         Off,
@@ -47,10 +41,6 @@ namespace APMapMod.Settings
         public bool ModEnabled = false;
 
         public MapMode mapMode = MapMode.FullMap;
-
-        public bool lookupOn = false;
-
-        public GroupBy groupBy;
 
         public bool SpoilerOn = false;
 
@@ -85,27 +75,9 @@ namespace APMapMod.Settings
             }
         }
 
-        public void ToggleLookup()
-        {
-            lookupOn = !lookupOn;
-        }
-
         public void ToggleBench()
         {
             showBenchPins = !showBenchPins;
-        }
-
-        public void ToggleGroupBy()
-        {
-            switch (groupBy)
-            {
-                case GroupBy.Location:
-                    groupBy += 1;
-                    break;
-                default:
-                    groupBy = GroupBy.Location;
-                    break;
-            }
         }
 
         public void ToggleSpoilers()

@@ -175,9 +175,7 @@ namespace APMapMod.Data
             {
                 if (placement.Value.Name.Contains("Vanilla") || placement.Value.Name == "Start") continue;
 
-                IEnumerable<ItemDef> items = placement.Value.Items
-                    .Where(x => !x.IsObtained())
-                    .Select(x => new ItemDef(x));
+                IEnumerable<AbstractItem> items = placement.Value.Items.Where(x => !x.IsObtained());
 
                 if (!items.Any()) continue;
 
@@ -207,10 +205,10 @@ namespace APMapMod.Data
 
                 unsortedGroups.Add(pd.locationPoolGroup);
 
-                foreach (ItemDef i in pd.randoItems)
-                {
-                    unsortedGroups.Add(i.poolGroup);
-                }
+                //foreach (ItemDef i in pd.randoItems)
+                //{
+                //    unsortedGroups.Add(i.poolGroup);
+                //}
 
                 //APMapMod.Instance.Log(locationName);
                 //APMapMod.Instance.Log(pinDef.locationPoolGroup);

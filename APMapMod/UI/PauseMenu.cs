@@ -23,12 +23,6 @@ namespace APMapMod.UI
             ["Mode"] = (ModeClicked, new Vector2(200f, 30f)),
         };
 
-        private static readonly Dictionary<string, (UnityAction<string>, Vector2)> _poolPanelAuxButtons = new()
-        {
-            ["GroupBy"] = (GroupByClicked, new Vector2(-200f, 60f)),
-            ["Persistent"] = (PersistentClicked, new Vector2(-100f, 60f))
-        };
-
         private static CanvasPanel _mapControlPanel;
 
         public static void BuildMenu(GameObject _canvas)
@@ -145,21 +139,21 @@ namespace APMapMod.UI
                 fontSize: 10
             );
 
-            foreach (KeyValuePair<string, (UnityAction<string>, Vector2)> pair in _poolPanelAuxButtons)
-            {
-                pools.AddButton
-                (
-                    pair.Key,
-                    GUIController.Instance.Images["ButtonRectEmpty"],
-                    pair.Value.Item2,
-                    Vector2.zero,
-                    pair.Value.Item1,
-                    buttonRect,
-                    GUIController.Instance.TrajanBold,
-                    pair.Key,
-                    fontSize: 10
-                );
-            }
+            //foreach (KeyValuePair<string, (UnityAction<string>, Vector2)> pair in _poolPanelAuxButtons)
+            //{
+            //    pools.AddButton
+            //    (
+            //        pair.Key,
+            //        GUIController.Instance.Images["ButtonRectEmpty"],
+            //        pair.Value.Item2,
+            //        Vector2.zero,
+            //        pair.Value.Item1,
+            //        buttonRect,
+            //        GUIController.Instance.TrajanBold,
+            //        pair.Key,
+            //        fontSize: 10
+            //    );
+            //}
 
             UpdateGUI();
 
@@ -214,8 +208,6 @@ namespace APMapMod.UI
             }
 
             UpdateBench();
-            UpdateGroupBy();
-            UpdatePersistent();
         }
 
         public static void EnableClicked(string buttonName)
@@ -510,51 +502,6 @@ namespace APMapMod.UI
                 (
                     APMapMod.LS.showBenchPins ? Color.green : Color.white
                 );
-        }
-
-        public static void GroupByClicked(string buttonName)
-        {
-            APMapMod.LS.ToggleGroupBy();
-
-            WorldMap.CustomPins.GetRandomizedOthersGroups();
-            WorldMap.CustomPins.ResetPoolSettings();
-
-            UpdateGUI();
-        }
-
-        private static void UpdateGroupBy()
-        {
-            switch (APMapMod.LS.groupBy)
-            {
-                case GroupBy.Location:
-                    _mapControlPanel.GetPanel("PoolsPanel").GetButton("GroupBy").UpdateText("Group by:\nLocation");
-                    break;
-
-                case GroupBy.Item:
-                    _mapControlPanel.GetPanel("PoolsPanel").GetButton("GroupBy").UpdateText("Group by:\nItem");
-                    break;
-            }
-        }
-
-        public static void PersistentClicked(string buttonName)
-        {
-            APMapMod.GS.TogglePersistentOn();
-
-            UpdateGUI();
-        }
-
-        private static void UpdatePersistent()
-        {
-            if (APMapMod.GS.persistentOn)
-            {
-                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").UpdateText($"Persistent items: On");
-                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").SetTextColor(Color.green);
-            }
-            else
-            {
-                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").UpdateText($"Persistent items: Off");
-                _mapControlPanel.GetPanel("PoolsPanel").GetButton("Persistent").SetTextColor(Color.white);
-            }
         }
     }
 }

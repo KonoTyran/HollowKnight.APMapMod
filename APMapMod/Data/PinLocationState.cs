@@ -5,9 +5,7 @@
         UncheckedUnreachable,
         UncheckedReachable,
         NonRandomizedUnchecked,
-        OutOfLogicReachable,
         Previewed,
-        Cleared,
-        ClearedPersistent
+        Cleared
     }
 }

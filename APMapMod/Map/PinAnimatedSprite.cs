@@ -90,41 +90,17 @@ namespace APMapMod.Map
             string pool = PD.locationPoolGroup;
 
             if (PD.pinLocationState == PLS.Previewed
-                || PD.pinLocationState == PLS.ClearedPersistent
                 || APMapMod.LS.SpoilerOn)
             {
-                pool = PD.randoItems.ElementAt(spriteIndex).poolGroup;
+                pool = "Unknown";
             }
 
             // Set border color of pin
             PBC pinBorderColor = PBC.Normal;
 
-            switch (PD.pinLocationState)
+            if (PD.pinLocationState == PLS.Previewed)
             {
-                case PLS.OutOfLogicReachable:
-
-                    pinBorderColor = PBC.OutOfLogic;
-
-                    break;
-
-                case PLS.Previewed:
-
-                    pinBorderColor = PBC.Previewed;
-
-                    break;
-
-                case PLS.ClearedPersistent:
-
-                    if (PD.randoItems.ElementAt(spriteIndex).persistent)
-                    {
-                        pinBorderColor = PBC.Persistent;
-                    }
-
-                    break;
-
-                default:
-
-                    break;
+                pinBorderColor = PBC.Previewed;
             }
 
             SR.sprite = SpriteManager.GetSpriteFromPool(pool, pinBorderColor);
@@ -136,7 +112,6 @@ namespace APMapMod.Map
             transform.localScale = PD.pinLocationState switch
             {
                 PLS.UncheckedReachable
-                or PLS.OutOfLogicReachable
                 or PLS.Previewed
                 => GetPinScale() * new Vector2(1.45f, 1.45f),
 
@@ -147,9 +122,7 @@ namespace APMapMod.Map
             SR.color = PD.pinLocationState switch
             {
                 PLS.UncheckedReachable
-                or PLS.OutOfLogicReachable
                 or PLS.Previewed
-                or PLS.ClearedPersistent
                 => _origColor,
 
                 _ => _inactiveColor,

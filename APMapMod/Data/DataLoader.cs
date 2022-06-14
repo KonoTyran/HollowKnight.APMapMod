@@ -125,10 +125,10 @@ namespace APMapMod.Data
         //    return default;
         //}
 
-        //public static bool IsPersistent(this AbstractItem item)
-        //{
-        //    return item.HasTag<ItemChanger.Tags.PersistentItemTag>();
-        //}
+        public static bool IsPersistent(this AbstractItem item)
+        {
+            return item.HasTag<ItemChanger.Tags.PersistentItemTag>();
+        }
 
         public static bool CanPreviewItem(this AbstractPlacement placement)
         {
@@ -152,6 +152,214 @@ namespace APMapMod.Data
         //    return default;
         //}
 
+        public static string GetPlacementGroup(this AbstractPlacement placement)
+        {
+            switch (placement.Name.Split('-')[0])
+            {
+                case "Lurien":
+                case "Monomon":
+                case "Herrah":
+                case "World_Sense":
+                    return "Dreamers";
+                    
+                case "Mothwing_Cloak":
+                case "Mantis_Claw":
+                case "Crystal_Heart":
+                case "Monarch_Wings":
+                case "Shade_Cloak":
+                case "Isma's_Tear":
+                case "Dream_Nail":
+                case "Vengeful_Spirit":
+                case "Shade_Soul":
+                case "Desolate_Dive":
+                case "Descending_Dark":
+                case "Howling_Wraiths":
+                case "Abyss_Shriek":
+                case "Cyclone_Slash":
+                case "Dash_Slash":
+                case "Great_Slash":
+                    return "Skills";
+                    
+                case "Baldur_Shell":
+                case "Fury_of_the_Fallen":
+                case "Lifeblood_Core":
+                case "Defender's_Crest":
+                case "Flukenest":
+                case "Thorns_of_Agony":
+                case "Mark_of_Pride":
+                case "Sharp_Shadow":
+                case "Spore_Shroom":
+                case "Soul_Catcher":
+                case "Soul_Eater":
+                case "Glowing_Womb":
+                case "Nailmaster's_Glory":
+                case "Joni's_Blessing":
+                case "Shape_of_Unn":
+                case "Hiveblood":
+                case "Dashmaster":
+                case "Quick_Slash":
+                case "Spell_Twister":
+                case "Deep_Focus":
+                case "Queen_Fragment":
+                case "King_Fragment":
+                case "Void_Heart":
+                case "Dreamshield":
+                case "Weaversong":
+                case "Grimmchild":
+                case "Unbreakable_Heart":
+                case "Unbreakable_Greed":
+                case "Unbreakable_Strength":
+                    return "Charms";
+                        
+                case "Simple_Key":
+                case "Shopkeeper's_Key":
+                case "Love_Key":
+                case "King's_Brand":
+                case "Godtuner":
+                case "Collector's_Map":
+                case "City_Crest":
+                case "Tram_Pass":
+                    return "Keys";
+                    
+                case "Mask_Shard":
+                    return "Mask Shards";
+
+                case "Vessel_Fragment":
+                    return "Vessel Fragments";
+                
+                case "Charm_Notch":
+                    return "Charm Notches";
+                    
+                case "Pale_Ore":
+                    return "Pale Ore";
+                    
+                case "Geo_Chest":
+                case "Lumafly_Escape":
+                    return "Geo Chests";
+                    
+                case "Rancid_Egg":
+                    return "Rancid Eggs";
+                    
+                case "Wanderer's_Journal": 
+                case "Hallownest_Seal":
+                case "King's_Idol": 
+                case "Arcane_Egg":
+                    return "Relics";
+                    
+                case "Whispering_Root":
+                    return "Whispering Roots";
+                    
+                case "Boss_Essence":
+                    return "Boss Essence";
+                    
+                case "Grub":
+                    return "Grubs";
+                    
+                case "Mimic_Grub":
+                    return "Mimics";
+                    
+                case "Lifeblood_Cocoon":
+                    return "Lifeblood Cocoons";
+                case "Grimmkin_Flame":
+                    return "Grimmkin Flames";
+                    
+                case "Hunter's_Journal":
+                case "Journal_Entry":
+                    return "Journal Entries";
+                    
+                case "Geo_Rock":
+                    return "Geo Rocks";
+                    
+                case "Boss_Geo":
+                    return "Boss Geo";
+                    
+                case "Soul_Totem":
+                    return "Soul Totems";
+                    
+                case "Lore_Tablet":
+                    return "Lore Tablets";
+                    
+                case "Sly":
+                case "Sly_(Key)":
+                case "Salubra":
+                case "Iselda":
+                case "Leg_Eater":
+                case "Seer":
+                case "Grubfather":
+                    return "Shops";
+            }
+
+            if (placement.Name.Contains("Map"))
+                return "Maps"; 
+            
+            if (placement.Name.Contains("Stag"))
+                return "Stags";
+            
+            return "Unknown";
+        }
+
+        public static bool IsRandomized(this AbstractPlacement placement)
+        {
+
+            var slotOptions = Archipelago.HollowKnight.Archipelago.Instance.SlotOptions;
+
+            switch (placement.GetPlacementGroup())
+            {
+                case "Dreamers":
+                    return slotOptions.RandomizeDreamers;
+                case "Skills":
+                    return slotOptions.RandomizeSkills;
+                case "Charms":
+                    return slotOptions.RandomizeCharms;
+                case "Keys":
+                    return slotOptions.RandomizeKeys;
+                case "Mask Shards":
+                    return slotOptions.RandomizeMaskShards;
+                case "Vessel Fragments":
+                    return slotOptions.RandomizeVesselFragments; 
+                case "Charm Notches":
+                    return slotOptions.RandomizeCharmNotches;
+                case "Pale Ore":
+                    return slotOptions.RandomizePaleOre;
+                case "Geo Chests":
+                    return placement.Name.Contains("Junk_Pit") ? slotOptions.RandomizeJunkPitChests : slotOptions.RandomizeGeoChests; 
+                case "Rancid Eggs":
+                    return slotOptions.RandomizeRancidEggs;
+                case "Relics":
+                    return slotOptions.RandomizeRelics;
+                case "Whispering Roots":
+                    return slotOptions.RandomizeWhisperingRoots;
+                case "Boss Essence":
+                    return slotOptions.RandomizeBossEssence; 
+                case "Grubs":
+                    return slotOptions.RandomizeGrubs;
+                case "Mimics":
+                    return slotOptions.RandomizeMimics; 
+                case "Maps":
+                    return slotOptions.RandomizeMaps;
+                case "Stags":
+                    return slotOptions.RandomizeStags;
+                case "Lifeblood Cocoons":
+                    return slotOptions.RandomizeLifebloodCocoons;
+                case "Grimmkin Flames":
+                    return slotOptions.RandomizeGrimmkinFlames;
+                case "Journal Entries":
+                    return slotOptions.RandomizeJournalEntries;
+                case "Geo Rocks":
+                    return slotOptions.RandomizeGeoRocks;
+                case "Boss Geo":
+                    return slotOptions.RandomizeBossGeo;
+                case "Soul Totems":
+                    return !placement.Name.Contains("White_Palace") && !placement.Name.Contains("Path_of_Pain") && slotOptions.RandomizeSoulTotems;
+                case "Lore Tablets":
+                    return slotOptions.RandomizeLoreTablets;
+                case "Shops":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        
         public static bool HasObtainedVanillaItem(PinDef pd)
         {
             return (pd.pdBool != null && PlayerData.instance.GetBool(pd.pdBool))
@@ -186,6 +394,7 @@ namespace APMapMod.Data
                     APMapMod.Instance.Log("Unknown placement. Making a 'best guess' for the placement");
                 }
 
+                //APMapMod.Instance.LogDebug($"new item pin def: {placement.Value.Name}");
                 pd.name = placement.Value.Name;
                 pd.sceneName = Finder.GetLocation(placement.Value.Name).sceneName;
 
@@ -194,12 +403,13 @@ namespace APMapMod.Data
                     pd.pinScene = _pinScenes[pd.sceneName];
                 }
 
-                pd.randomized = true;
+                pd.randomized = placement.Value.IsRandomized();
+                pd.locationPoolGroup = placement.Value.GetPlacementGroup();
+
                 pd.randoItems = items;
                 pd.canPreviewItem = placement.Value.CanPreviewItem();
 
                 pd.pinLocationState = PinLocationState.UncheckedReachable;
-                pd.locationPoolGroup = "Unknown";
 
                 _usedPins.Add(placement.Value.Name, pd);
 

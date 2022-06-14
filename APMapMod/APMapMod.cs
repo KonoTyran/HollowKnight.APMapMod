@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using InControl;
 
 namespace APMapMod
 {
@@ -16,7 +17,7 @@ namespace APMapMod
     {
         public static APMapMod Instance;
 
-        public override string GetVersion() => "v0.1.0";
+        public override string GetVersion() => "0.1.0";
 
         public override int LoadPriority() => 10;
 
@@ -74,7 +75,7 @@ namespace APMapMod
             }
 
             ModHooks.NewGameHook += ModHooks_NewGameHook;
-            On.GameManager.LoadGame += GameManager_LoadGame;
+            On.HeroController.Start += HeroContoller_Start;
             On.QuitToMenu.Start += QuitToMenu_Start;
 
             Log("Initialization complete.");
@@ -85,10 +86,10 @@ namespace APMapMod
             Hook();
         }
 
-        private void GameManager_LoadGame(On.GameManager.orig_LoadGame orig, GameManager self, int saveSlot, Action<bool> callback)
+        private void HeroContoller_Start(On.HeroController.orig_Start orig, HeroController self)
         {
-            orig(self, saveSlot, callback);
-
+            orig(self);
+            
             Hook();
         }
 
@@ -101,7 +102,9 @@ namespace APMapMod
 
         private void Hook()
         {
+            Log("Checking if AP is enabled.");
             // AP INTEGRATION: Determine if current save is AP
+            if (!Archipelago.HollowKnight.Archipelago.Instance.ArchipelagoEnabled) return;
 
             //if (RandomizerMod.RandomizerMod.RS.GenerationSettings == null) return;
 

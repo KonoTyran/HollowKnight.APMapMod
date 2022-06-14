@@ -8,6 +8,7 @@ namespace APMapMod.Trackers
         public static void Hook()
         {
             // AP INTEGRATION: Determine if current save is AP
+            if (!Archipelago.HollowKnight.Archipelago.Instance.ArchipelagoEnabled) return;
             //if (RandomizerMod.RandomizerMod.RS.GenerationSettings.PoolSettings.GeoRocks) return;
 
             On.GeoRock.OnEnable += GeoRock_OnEnable;

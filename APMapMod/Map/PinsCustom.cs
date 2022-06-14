@@ -187,7 +187,7 @@ namespace APMapMod.Map
             //        pd.pinLocationState = PinLocationState.OutOfLogicReachable;
             //    }
             //}
-
+            
             //// Check if previewed
             //if (RandomizerMod.RandomizerMod.RS.TrackerData.previewedLocations.Contains(pd.name) && pd.canPreviewItem)
             //{

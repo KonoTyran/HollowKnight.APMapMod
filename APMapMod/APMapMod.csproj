@@ -11,6 +11,7 @@
     <Deterministic>true</Deterministic>
     <AssemblyName>APMapMod</AssemblyName>
 	<HollowKnightRefs>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed</HollowKnightRefs>
+    <ExportDir>..\..\Exports</ExportDir>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -365,7 +366,7 @@
 
     <ItemGroup>
       <Reference Include="Archipelago.HollowKnight">
-        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\Archipelago.HollowKnight\Archipelago.HollowKnight.dll</HintPath>
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\Archipelago\Archipelago.HollowKnight.dll</HintPath>
       </Reference>
       <Reference Include="Assembly-CSharp">
         <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Assembly-CSharp.dll</HintPath>

@@ -69,6 +69,7 @@ namespace APMapMod.Trackers
             orig(self);
 
             // AP INTEGRATION: Determine if current save is AP
+            if (!Archipelago.HollowKnight.Archipelago.Instance.ArchipelagoEnabled) return;
             //if (RandomizerMod.RandomizerMod.RS.GenerationSettings == null) return;
 
             switch (self.gameObject.name)

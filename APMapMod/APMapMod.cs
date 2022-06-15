@@ -17,7 +17,7 @@ namespace APMapMod
     {
         public static APMapMod Instance;
 
-        public override string GetVersion() => "0.1.0";
+        public override string GetVersion() => "0.1.1";
 
         public override int LoadPriority() => 10;
 
@@ -73,17 +73,11 @@ namespace APMapMod
                 LogError($"Error loading data!\n{e}");
                 throw;
             }
-
-            ModHooks.NewGameHook += ModHooks_NewGameHook;
+            
             On.HeroController.Start += HeroContoller_Start;
             On.QuitToMenu.Start += QuitToMenu_Start;
 
             Log("Initialization complete.");
-        }
-
-        private void ModHooks_NewGameHook()
-        {
-            Hook();
         }
 
         private void HeroContoller_Start(On.HeroController.orig_Start orig, HeroController self)

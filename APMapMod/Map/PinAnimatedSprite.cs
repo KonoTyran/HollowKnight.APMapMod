@@ -92,15 +92,42 @@ namespace APMapMod.Map
             if (PD.pinLocationState == PLS.Previewed
                 || APMapMod.LS.SpoilerOn)
             {
-                pool = "Unknown";
+                pool = PD.locationPoolGroup;
             }
 
             // Set border color of pin
             PBC pinBorderColor = PBC.Normal;
-
-            if (PD.pinLocationState == PLS.Previewed)
+            
+            if (PD.pinLocationState == PLS.Previewed && PD.canPreviewItem)
             {
                 pinBorderColor = PBC.Previewed;
+            }
+            
+            foreach (var item in PD.randoItems)
+            {
+                if (PD.pinLocationState == PLS.Previewed && PD.canPreviewItem)
+                {
+                    if (item.UIDef.GetShopDesc().Contains("important"))
+                    {
+                        pool = "Archipelago Progression";
+                    }
+                    else if (item.UIDef.GetShopDesc().Contains("useful") && pool != "Archipelago Progression")
+                    {
+                        pool = "Archipelago Useful";
+                    }
+                    else if (item.UIDef.GetShopDesc().Contains("artifact") && pool != "Archipelago Progression" && pool != "Archipelago Useful")
+                    {
+                        pool = "Archipelago";
+                    }
+                }
+
+                if (!item.IsPersistent() || !item.WasEverObtained()) continue;
+                pinBorderColor = PBC.Persistent;
+                    
+                if (item.name.StartsWith("Soul_Totem"))
+                    pool = "Soul Totems";
+                else if( item.name.StartsWith("Lifeblood_Cocoon"))
+                    pool = "Lifeblood Cocoons";
             }
 
             SR.sprite = SpriteManager.GetSpriteFromPool(pool, pinBorderColor);

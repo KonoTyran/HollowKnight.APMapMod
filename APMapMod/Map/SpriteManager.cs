@@ -64,6 +64,9 @@ namespace APMapMod.Map
                     "Shops" => "pinShop",
                     "Levers" => "pinLever",
                     "Mr Mushroom" => "pinLore",
+                    "Archipelago" => "pinAP",
+                    "Archipelago Useful" => "pinAPUseful",
+                    "Archipelago Progression" => "pinAPProgression",
                     _ => "pinUnknown",
                 };
             }

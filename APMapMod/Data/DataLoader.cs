@@ -2,6 +2,7 @@
 using ItemChanger;
 using System.Collections.Generic;
 using System.Linq;
+using ItemChanger.Extensions;
 
 namespace APMapMod.Data
 {
@@ -350,7 +351,7 @@ namespace APMapMod.Data
                 case "Boss Geo":
                     return slotOptions.RandomizeBossGeo;
                 case "Soul Totems":
-                    return !placement.Name.Contains("White_Palace") && !placement.Name.Contains("Path_of_Pain") && slotOptions.RandomizeSoulTotems;
+                    return slotOptions.RandomizeSoulTotems;
                 case "Lore Tablets":
                     return slotOptions.RandomizeLoreTablets;
                 case "Shops":
@@ -383,7 +384,7 @@ namespace APMapMod.Data
             {
                 if (placement.Value.Name.Contains("Vanilla") || placement.Value.Name == "Start") continue;
 
-                IEnumerable<AbstractItem> items = placement.Value.Items.Where(x => !x.IsObtained());
+                IEnumerable<AbstractItem> items = placement.Value.Items.Where(x => !x.IsObtained() || x.IsPersistent());
 
                 if (!items.Any()) continue;
 
@@ -410,11 +411,18 @@ namespace APMapMod.Data
                 pd.canPreviewItem = placement.Value.CanPreviewItem();
 
                 pd.pinLocationState = PinLocationState.UncheckedReachable;
+                pd.placement = placement.Value;
 
                 _usedPins.Add(placement.Value.Name, pd);
 
                 unsortedGroups.Add(pd.locationPoolGroup);
 
+                foreach (var item in items)
+                {
+                    if (item.IsPersistent())
+                        pd.persistant = true;
+                }
+                
                 //foreach (ItemDef i in pd.randoItems)
                 //{
                 //    unsortedGroups.Add(i.poolGroup);

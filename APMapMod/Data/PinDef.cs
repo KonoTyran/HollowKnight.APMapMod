@@ -39,5 +39,8 @@ namespace APMapMod.Data
         public PinLocationState pinLocationState;
 
         public bool canShowOnMap = false;
+        public bool persistant = false;
+
+        public AbstractPlacement placement;
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ItemChanger;
+using ItemChanger.Extensions;
 
 namespace APMapMod.Map
 {
@@ -123,6 +124,7 @@ namespace APMapMod.Map
                 if ((mapZone == MapZone.NONE && (APMapMod.LS.mapMode != MapMode.PinsOverMap || SettingsUtil.GetMapSetting(pd.mapZone)))
                     || mapZone == pd.mapZone)
                 {
+                    
                     pin.PD.canShowOnMap = true;
 
                     if (transitionPinScenes.Count != 0 && !transitionPinScenes.Contains(pd.sceneName))
@@ -135,7 +137,7 @@ namespace APMapMod.Map
                     pin.PD.canShowOnMap = false;
                 }
 
-                if (pd.pinLocationState == PinLocationState.Cleared)
+                if (pd.pinLocationState == PinLocationState.Cleared && !pd.persistant)
                 {
                     pin.PD.canShowOnMap = false;
                 }
@@ -166,7 +168,7 @@ namespace APMapMod.Map
 
                 foreach (AbstractItem item in pd.randoItems)
                 {
-                    if (!item.IsObtained())
+                    if (!item.IsObtained() || item.IsPersistent())
                     {
                         newRandoItems.Add(item);
                     }
@@ -188,11 +190,11 @@ namespace APMapMod.Map
             //    }
             //}
             
-            //// Check if previewed
-            //if (RandomizerMod.RandomizerMod.RS.TrackerData.previewedLocations.Contains(pd.name) && pd.canPreviewItem)
-            //{
-            //    pd.pinLocationState = PinLocationState.Previewed;
-            //}
+            // Check if previewed
+            if (pd.placement.Visited.HasFlag(VisitState.Previewed) && pd.canPreviewItem)
+            {
+                pd.pinLocationState = PinLocationState.Previewed;
+            }
 
             // Check if cleared
 

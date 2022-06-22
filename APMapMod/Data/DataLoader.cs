@@ -1,4 +1,5 @@
-﻿using GlobalEnums;
+﻿using System;
+using GlobalEnums;
 using ItemChanger;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,7 +156,12 @@ namespace APMapMod.Data
 
         public static string GetPlacementGroup(this AbstractPlacement placement)
         {
-            switch (placement.Name.Split('-')[0])
+            return GetPlacementGroup(placement.Name);
+        }
+
+        public static string GetPlacementGroup(String name)
+        {
+            switch (name.Split('-')[0])
             {
                 case "Lurien":
                 case "Monomon":
@@ -170,6 +176,8 @@ namespace APMapMod.Data
                 case "Shade_Cloak":
                 case "Isma's_Tear":
                 case "Dream_Nail":
+                case "Awoken_Dream_Nail":
+                case "Dream_Gate":
                 case "Vengeful_Spirit":
                 case "Shade_Soul":
                 case "Desolate_Dive":
@@ -207,9 +215,26 @@ namespace APMapMod.Data
                 case "Dreamshield":
                 case "Weaversong":
                 case "Grimmchild":
+                case "Carefree_Melody":
+                case "Longnail":
+                case "Gathering_Swarm":
+                case "Steady_Body":
+                case "Shaman_Stone":
+                case "Quick_Focus":
+                case "Lifeblood_Heart":
+                case "Stalwart_Shell":
+                case "Heavy_Blow":
+                case "Sprintmaster":
+                case "Grubsong":
+                case "Grubberfly's_Elegy":
+                case "Dream_Wielder":
+                case "Wayward_Compass":
                 case "Unbreakable_Heart":
                 case "Unbreakable_Greed":
                 case "Unbreakable_Strength":
+                case "Fragile_Heart":
+                case "Fragile_Greed":
+                case "Fragile_Strength":
                     return "Charms";
                         
                 case "Simple_Key":
@@ -260,6 +285,8 @@ namespace APMapMod.Data
                     return "Mimics";
                     
                 case "Lifeblood_Cocoon":
+                case "Lifeblood_Cocoon_Large":
+                case "Lifeblood_Cocoon_Small":
                     return "Lifeblood Cocoons";
                 case "Grimmkin_Flame":
                     return "Grimmkin Flames";
@@ -290,10 +317,10 @@ namespace APMapMod.Data
                     return "Shops";
             }
 
-            if (placement.Name.Contains("Map"))
+            if (name.Contains("Map"))
                 return "Maps"; 
             
-            if (placement.Name.Contains("Stag"))
+            if (name.Contains("Stag"))
                 return "Stags";
             
             return "Unknown";

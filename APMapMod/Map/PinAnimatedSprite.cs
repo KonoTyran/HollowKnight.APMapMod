@@ -3,7 +3,10 @@ using APMapMod.Settings;
 using System;
 using System.Collections;
 using System.Linq;
+using Archipelago.HollowKnight.IC;
+using ItemChanger;
 using UnityEngine;
+using Archipelago.MultiClient.Net.Enums;
 using PBC = APMapMod.Map.PinBorderColor;
 using PLS = APMapMod.Data.PinLocationState;
 
@@ -97,38 +100,40 @@ namespace APMapMod.Map
 
             // Set border color of pin
             PBC pinBorderColor = PBC.Normal;
-            
+
+            AbstractItem item = PD.randoItems.ToArray()[spriteIndex];
             if (PD.pinLocationState == PLS.Previewed && PD.canPreviewItem)
             {
                 pinBorderColor = PBC.Previewed;
-            }
-            
-            foreach (var item in PD.randoItems)
-            {
-                if (PD.pinLocationState == PLS.Previewed && PD.canPreviewItem)
-                {
-                    if (item.UIDef.GetShopDesc().Contains("important"))
-                    {
-                        pool = "Archipelago Progression";
-                    }
-                    else if (item.UIDef.GetShopDesc().Contains("useful") && pool != "Archipelago Progression")
-                    {
-                        pool = "Archipelago Useful";
-                    }
-                    else if (item.UIDef.GetShopDesc().Contains("artifact") && pool != "Archipelago Progression" && pool != "Archipelago Useful")
-                    {
-                        pool = "Archipelago";
-                    }
-                }
 
-                if (!item.IsPersistent() || !item.WasEverObtained()) continue;
+                if (Finder.ItemNames.Contains(item.name))
+                {
+                    pool = DataLoader.GetPlacementGroup(item.name);
+                }
+                else if (item.GetTag<ArchipelagoItemTag>().Flags.HasFlag(ItemFlags.Advancement))
+                {
+                    pool = "Archipelago Progression";
+                }
+                else if (item.GetTag<ArchipelagoItemTag>().Flags.HasFlag(ItemFlags.NeverExclude))
+                {
+                    pool = "Archipelago Useful";
+                }
+                else
+                {
+                    pool = "Archipelago";
+                }
+            }
+
+            if (item.IsPersistent() && item.WasEverObtained())
+            {
                 pinBorderColor = PBC.Persistent;
-                    
+
                 if (item.name.StartsWith("Soul_Totem"))
                     pool = "Soul Totems";
-                else if( item.name.StartsWith("Lifeblood_Cocoon"))
+                else if (item.name.StartsWith("Lifeblood_Cocoon"))
                     pool = "Lifeblood Cocoons";
             }
+
 
             SR.sprite = SpriteManager.GetSpriteFromPool(pool, pinBorderColor);
         }

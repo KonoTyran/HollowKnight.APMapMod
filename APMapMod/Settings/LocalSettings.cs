@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APMapMod.Map;
+using Color = UnityEngine.Color;
 
 namespace APMapMod.Settings
 {
@@ -42,7 +44,7 @@ namespace APMapMod.Settings
 
         public MapMode mapMode = MapMode.FullMap;
 
-        public bool SpoilerOn = false;
+        public bool PlayerIconsOn = false;
 
         public bool randomizedOn = true;
 
@@ -80,9 +82,13 @@ namespace APMapMod.Settings
             showBenchPins = !showBenchPins;
         }
 
-        public void ToggleSpoilers()
+        public void TogglePlayerIcons()
         {
-            SpoilerOn = !SpoilerOn;
+            PlayerIconsOn = !PlayerIconsOn;
+            if(PlayerIconsOn)
+                APMapMod.Instance.CoOpMap.EnableUpdates();
+            else
+                APMapMod.Instance.CoOpMap.DisableUpdates();
         }
 
         public void ToggleRandomizedOn()

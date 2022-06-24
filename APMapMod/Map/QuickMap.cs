@@ -251,12 +251,14 @@ namespace APMapMod.Map
             {
                 APMapMod.Instance.Log("AdditionalMaps WHITE_PALACE area detected");
                 FsmUtil.AddAction(FsmUtil.GetState(quickMapFSM, "WHITE_PALACE"), new QuickMapCustomArea(MapZone.WHITE_PALACE, gameMap));
+                CoOpMap.white_palace = true;
             }
 
             if (quickMapFSM.FsmStates.Any(state => state.Name == "GODS_GLORY"))
             {
                 APMapMod.Instance.Log("AdditionalMaps GODS_GLORY area detected");
                 FsmUtil.AddAction(FsmUtil.GetState(quickMapFSM, "GODS_GLORY"), new QuickMapCustomArea(MapZone.GODS_GLORY, gameMap));
+                CoOpMap.gods_glory = true;
             }
         }
     }

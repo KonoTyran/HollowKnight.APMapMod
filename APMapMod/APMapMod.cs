@@ -6,10 +6,10 @@ using APMapMod.Trackers;
 using APMapMod.UI;
 using Modding;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using InControl;
+using Archipelago.MultiClient.Net;
+using UnityEngine;
 
 namespace APMapMod
 {
@@ -17,7 +17,7 @@ namespace APMapMod
     {
         public static APMapMod Instance;
 
-        public override string GetVersion() => "0.1.2";
+        public override string GetVersion() => "0.2.0";
 
         public override int LoadPriority() => 10;
 
@@ -28,6 +28,10 @@ namespace APMapMod
         public static GlobalSettings GS = new();
         public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
         public GlobalSettings OnSaveGlobal() => GS;
+
+        internal ArchipelagoSession Session;
+
+        internal CoOpMap CoOpMap;
 
         public override void Initialize()
         {
@@ -74,34 +78,37 @@ namespace APMapMod
                 throw;
             }
             
-            On.HeroController.Start += HeroContoller_Start;
-            On.QuitToMenu.Start += QuitToMenu_Start;
+            Archipelago.HollowKnight.Archipelago.OnArchipelagoGameStarted += Hook;
+            Archipelago.HollowKnight.Archipelago.OnArchipelagoGameEnded += Unhook;
+            On.GameManager.SetGameMap += GameManager_SetGameMap;
 
             Log("Initialization complete.");
         }
 
-        private void HeroContoller_Start(On.HeroController.orig_Start orig, HeroController self)
+        private void GameManager_SetGameMap(On.GameManager.orig_SetGameMap orig, GameManager self, GameObject goGameMap)
         {
-            orig(self);
+            orig(self, goGameMap);
+
+            Log("Fetching MultiClient Session.");
+            try
+            {
+                var ap = Archipelago.HollowKnight.Archipelago.Instance;
+                var apType = ap.GetType();
+                var prop = apType.GetField("session", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+                Session = (ArchipelagoSession) prop.GetValue(ap);
+                Log("Success, enabling Co-Op integration.");
+            }
+            catch (Exception)
+            {
+                Log("Error Fetching Session, disabling Co-Op integration.");
+            }
             
-            Hook();
-        }
-
-        private IEnumerator QuitToMenu_Start(On.QuitToMenu.orig_Start orig, QuitToMenu self)
-        {
-            Unhook();
-
-            return orig(self);
+            CoOpMap = goGameMap.AddComponent<CoOpMap>();
         }
 
         private void Hook()
         {
-            Log("Checking if AP is enabled.");
-            // AP INTEGRATION: Determine if current save is AP
-            if (!Archipelago.HollowKnight.Archipelago.Instance.ArchipelagoEnabled) return;
-
-            //if (RandomizerMod.RandomizerMod.RS.GenerationSettings == null) return;
-
             Log("Activating mod");
 
             // Track when items are picked up/Geo Rocks are broken

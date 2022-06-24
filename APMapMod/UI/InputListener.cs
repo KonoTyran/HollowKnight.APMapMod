@@ -45,7 +45,7 @@ namespace APMapMod.UI
                 {
                     if (Input.GetKeyDown(KeyCode.Alpha1))
                     {
-                        PauseMenu.SpoilersClicked("Spoilers");
+                        PauseMenu.PlayerIconsClicked("Spoilers");
                     }
 
                     if (Input.GetKeyDown(KeyCode.Alpha2))

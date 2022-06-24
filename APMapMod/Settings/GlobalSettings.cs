@@ -1,4 +1,6 @@
-﻿namespace APMapMod.Settings
+﻿using APMapMod.Map;
+
+namespace APMapMod.Settings
 {
     public enum PinSize
     {
@@ -22,6 +24,8 @@
         public PinSize pinSize = PinSize.Medium;
 
         public bool persistentOn = false;
+        
+        public int IconColorIndex = 0;
 
         public void TogglePinStyle()
         {
@@ -56,5 +60,11 @@
         {
             persistentOn = !persistentOn;
         }
+        
+        public void ToggleColor()
+        {
+            IconColorIndex = (IconColorIndex + 1) % CoOpMap.colorList.Length;
+        }
+        
     }
 }

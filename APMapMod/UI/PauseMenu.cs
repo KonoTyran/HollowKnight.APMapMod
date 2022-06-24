@@ -15,12 +15,13 @@ namespace APMapMod.UI
 
         private static readonly Dictionary<string, (UnityAction<string>, Vector2)> _mainButtons = new()
         {
-            ["Spoilers"] = (SpoilersClicked, new Vector2(100f, 0f)),
+            ["Player Icons"] = (PlayerIconsClicked, new Vector2(100f, 0f)),
             ["Randomized"] = (RandomizedClicked, new Vector2(200f, 0f)),
             ["Others"] = (OthersClicked, new Vector2(300f, 0f)),
             ["Style"] = (StyleClicked, new Vector2(0f, 30f)),
             ["Size"] = (SizeClicked, new Vector2(100f, 30f)),
             ["Mode"] = (ModeClicked, new Vector2(200f, 30f)),
+            ["Color"] = (ColorClicked, new Vector2(0f, 60f)),
         };
 
         private static CanvasPanel _mapControlPanel;
@@ -194,13 +195,14 @@ namespace APMapMod.UI
             if (GameManager.instance.gameMap == null) return;
 
             UpdateEnable();
-            UpdateSpoilers();
+            UpdatePlayerIcons();
             UpdateRandomized();
             UpdateOthers();
             UpdateStyle();
             UpdateSize();
             UpdateMode();
             UpdatePoolsPanel();
+            UpdateColor();
 
             foreach (string group in DataLoader.usedPoolGroups)
             {
@@ -242,24 +244,23 @@ namespace APMapMod.UI
                 );
         }
 
-        public static void SpoilersClicked(string buttonName)
+        public static void PlayerIconsClicked(string buttonName)
         {
-            APMapMod.LS.ToggleSpoilers();
-            WorldMap.CustomPins.SetSprites();
+            APMapMod.LS.TogglePlayerIcons();
             
             UpdateGUI();
             MapText.SetTexts();
         }
 
-        private static void UpdateSpoilers()
+        private static void UpdatePlayerIcons()
         {
-            _mapControlPanel.GetButton("Spoilers").SetTextColor
+            _mapControlPanel.GetButton("Player Icons").SetTextColor
                 (
-                    APMapMod.LS.SpoilerOn ? Color.green : Color.white
+                    APMapMod.LS.PlayerIconsOn ? Color.green : Color.white
                 );
-            _mapControlPanel.GetButton("Spoilers").UpdateText
+            _mapControlPanel.GetButton("Player Icons").UpdateText
                 (
-                    APMapMod.LS.SpoilerOn? "Spoilers:\non" : "Spoilers:\noff"
+                    APMapMod.LS.PlayerIconsOn ? "Player Icons:\non" : "Player Icons:\noff"
                 );
         }
 
@@ -404,6 +405,13 @@ namespace APMapMod.UI
 
             _mapControlPanel.GetButton("Size").UpdateText(sizeText);
         }
+        
+        public static void ColorClicked(string buttonName)
+        {
+            APMapMod.GS.ToggleColor();
+
+            UpdateGUI();
+        }
 
         public static void ModeClicked(string buttonName)
         {
@@ -502,6 +510,12 @@ namespace APMapMod.UI
                 (
                     APMapMod.LS.showBenchPins ? Color.green : Color.white
                 );
+        }
+
+        public static void UpdateColor()
+        {
+            _mapControlPanel.GetButton("Color").SetTextColor(CoOpMap.colorList[APMapMod.GS.IconColorIndex]);
+
         }
     }
 }

@@ -93,7 +93,7 @@ namespace APMapMod.Map
             string pool = PD.locationPoolGroup;
 
             if (PD.pinLocationState == PLS.Previewed
-                || APMapMod.LS.SpoilerOn)
+                || APMapMod.LS.PlayerIconsOn)
             {
                 pool = PD.locationPoolGroup;
             }

@@ -14,8 +14,6 @@ namespace APMapMod.Map
     {
         public static void Hook()
         {
-            ReplaceKnightBools();
-
             On.RoughMapRoom.OnEnable += RoughMapRoom_OnEnable;
             IL.GameMap.WorldMap += ModifyMapBools;
             IL.GameMap.SetupMap += ModifyMapBools;
@@ -248,18 +246,6 @@ namespace APMapMod.Map
             }
         }
 
-        // Fixing some weird race condition issue where the hook below isn't added in time
-        private static void ReplaceKnightBools()
-        {
-            if (HeroController.instance.gameObject != null)
-            {
-                PlayMakerFSM self = HeroController.instance.gameObject.LocateMyFSM("Map Control");
-
-                ReplaceBool(self, "Button Down Check", 1);
-                FsmUtil.GetAction<GetPlayerDataBool>(self, "Has Map?", 3).boolName = "AMM_hasMap";
-            }
-        }
-
         private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
         {
             orig(self);
@@ -400,10 +386,7 @@ namespace APMapMod.Map
                 {
                     return true;
                 }
-                else
-                {
-                    return PlayerData.instance.GetBool(boolName.Remove(0, 4));
-                }
+                return PlayerData.instance.GetBool(boolName.Remove(0, 4));
             }
 
             return orig;

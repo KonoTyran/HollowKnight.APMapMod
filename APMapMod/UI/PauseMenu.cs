@@ -3,6 +3,7 @@ using APMapMod.Data;
 using APMapMod.Map;
 using APMapMod.Settings;
 using System.Collections.Generic;
+using APMapMod.Util;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -21,7 +22,6 @@ namespace APMapMod.UI
             ["Style"] = (StyleClicked, new Vector2(0f, 30f)),
             ["Size"] = (SizeClicked, new Vector2(100f, 30f)),
             ["Mode"] = (ModeClicked, new Vector2(200f, 30f)),
-            ["Color"] = (ColorClicked, new Vector2(0f, 60f)),
         };
 
         private static CanvasPanel _mapControlPanel;
@@ -202,7 +202,6 @@ namespace APMapMod.UI
             UpdateSize();
             UpdateMode();
             UpdatePoolsPanel();
-            UpdateColor();
 
             foreach (string group in DataLoader.usedPoolGroups)
             {
@@ -349,7 +348,7 @@ namespace APMapMod.UI
         {
             string styleText = $"Pin Style:\n";
 
-            switch (APMapMod.GS.pinStyle)
+            switch (APMapMod.GS.PinStyle)
             {
                 case PinStyle.Normal:
                     styleText += "normal";
@@ -388,7 +387,7 @@ namespace APMapMod.UI
         {
             string sizeText = $"Pin Size:\n";
 
-            switch (APMapMod.GS.pinSize)
+            switch (APMapMod.GS.PinSize)
             {
                 case PinSize.Small:
                     sizeText += "small";
@@ -404,13 +403,6 @@ namespace APMapMod.UI
             }
 
             _mapControlPanel.GetButton("Size").UpdateText(sizeText);
-        }
-        
-        public static void ColorClicked(string buttonName)
-        {
-            APMapMod.GS.ToggleColor();
-
-            UpdateGUI();
         }
 
         public static void ModeClicked(string buttonName)
@@ -510,12 +502,6 @@ namespace APMapMod.UI
                 (
                     APMapMod.LS.showBenchPins ? Color.green : Color.white
                 );
-        }
-
-        public static void UpdateColor()
-        {
-            _mapControlPanel.GetButton("Color").SetTextColor(CoOpMap.colorList[APMapMod.GS.IconColorIndex]);
-
         }
     }
 }

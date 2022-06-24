@@ -31,7 +31,7 @@ namespace APMapMod.Map
         {
             string spriteName = "undefined";
 
-            if (APMapMod.GS.pinStyle == PinStyle.Normal
+            if (APMapMod.GS.PinStyle == PinStyle.Normal
                 || color == PinBorderColor.Previewed
                 || color == PinBorderColor.Persistent)
             {
@@ -70,7 +70,7 @@ namespace APMapMod.Map
                     _ => "pinUnknown",
                 };
             }
-            else if (APMapMod.GS.pinStyle == PinStyle.Q_Marks_1)
+            else if (APMapMod.GS.PinStyle == PinStyle.Q_Marks_1)
             {
                 spriteName = pool switch
                 {
@@ -78,7 +78,7 @@ namespace APMapMod.Map
                     _ => "pinUnknown",
                 };
             }
-            else if (APMapMod.GS.pinStyle == PinStyle.Q_Marks_2)
+            else if (APMapMod.GS.PinStyle == PinStyle.Q_Marks_2)
             {
                 spriteName = pool switch
                 {
@@ -91,7 +91,7 @@ namespace APMapMod.Map
                     _ => "pinUnknown",
                 };
             }
-            else if (APMapMod.GS.pinStyle == PinStyle.Q_Marks_3)
+            else if (APMapMod.GS.PinStyle == PinStyle.Q_Marks_3)
             {
                 spriteName = pool switch
                 {

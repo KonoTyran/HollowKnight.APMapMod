@@ -169,7 +169,7 @@ namespace APMapMod.Map
 
         private float GetPinScale()
         {
-            return APMapMod.GS.pinSize switch
+            return APMapMod.GS.PinSize switch
             {
                 PinSize.Small => 0.31f,
                 PinSize.Medium => 0.37f,

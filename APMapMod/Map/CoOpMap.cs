@@ -111,7 +111,7 @@ namespace APMapMod.Map {
         internal void EnableUpdates()
         {
             _playerList.Add(_netClient.ConnectionInfo.Uuid,0);
-            OnPlayerMapUpdate(0, _myPos, colorList[APMapMod.GS.IconColorIndex]);
+            OnPlayerMapUpdate(0, _myPos, APMapMod.GS.IconColor.ToColor());
             StartCoroutine(SendPacketRoutine());
             StartCoroutine(UpdatePlayersRoutine());
         }
@@ -121,7 +121,8 @@ namespace APMapMod.Map {
             _myPos = Vector2.zero;
             _playerList.Clear();
             StopAllCoroutines();
-            SendUpdatePacket();
+            var thread = new Thread(SendUpdatePacket);
+            thread.Start();
             APMapMod.Instance.CoOpMap.RemoveAllIcons();
         }
 
@@ -129,7 +130,7 @@ namespace APMapMod.Map {
         private void SendUpdatePacket()
         {
             if (!APMapMod.Instance.Session.Socket.Connected) return;
-            var color = colorList[APMapMod.GS.IconColorIndex];
+            var color =  APMapMod.GS.IconColor.ToColor();
             var bounce = new BouncePacket
             {
                 Games = new List<string>
@@ -258,7 +259,7 @@ namespace APMapMod.Map {
                 _lastPosition = newPosition;
                 _sendNewPos = true;
                 
-                OnPlayerMapUpdate(0,_myPos,colorList[APMapMod.GS.IconColorIndex]);
+                OnPlayerMapUpdate(0,_myPos, APMapMod.GS.IconColor.ToColor());
             }
         }
 
@@ -408,7 +409,7 @@ namespace APMapMod.Map {
             var unityPosition = new Vector3(
                 position.x, 
                 position.y,
-                id * -0.01f
+                id * -0.01f - 5f
             );
 
             // Update the position of the player icon
@@ -487,7 +488,7 @@ namespace APMapMod.Map {
             var unityPosition = new Vector3(
                 position.x, 
                 position.y,
-                id * -0.01f
+                id * -0.01f - 5f
             );
             
             // Set the position of the player icon

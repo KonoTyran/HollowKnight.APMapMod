@@ -13,10 +13,12 @@ using UnityEngine;
 
 namespace APMapMod
 {
-    public class APMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>
+    public class APMapMod : Mod, ILocalSettings<LocalSettings>, IGlobalSettings<GlobalSettings>, ICustomMenuMod
     {
         public static APMapMod Instance;
 
+        public bool ToggleButtonInsideMenu { get; }
+        
         public override string GetVersion() => "0.2.0";
 
         public override int LoadPriority() => 10;
@@ -152,6 +154,11 @@ namespace APMapMod
             Quill.Unhook();
             GUI.Unhook();
             InputListener.DestroySingleton();
+        }
+
+        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggleDelegates)
+        {
+            return BetterMenu.GetMenuScreen(modListMenu, toggleDelegates);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using APMapMod.Map;
+using APMapMod.Util;
+using UnityEngine;
 
 namespace APMapMod.Settings
 {
@@ -19,52 +21,46 @@ namespace APMapMod.Settings
 
     public class GlobalSettings
     {
-        public PinStyle pinStyle = PinStyle.Normal;
+        public PinStyle PinStyle = PinStyle.Normal;
 
-        public PinSize pinSize = PinSize.Medium;
+        public PinSize PinSize = PinSize.Medium;
 
-        public bool persistentOn = false;
-        
-        public int IconColorIndex = 0;
+        public bool PersistentOn = false;
+
+        public (int r, int g, int b) IconColor = Color.white.ToTuple();
 
         public void TogglePinStyle()
         {
-            switch (pinStyle)
+            switch (PinStyle)
             {
                 case PinStyle.Normal:
                 case PinStyle.Q_Marks_1:
                 case PinStyle.Q_Marks_2:
-                    pinStyle += 1;
+                    PinStyle += 1;
                     break;
                 default:
-                    pinStyle = PinStyle.Normal;
+                    PinStyle = PinStyle.Normal;
                     break;
             }
         }
 
         public void TogglePinSize()
         {
-            switch (pinSize)
+            switch (PinSize)
             {
                 case PinSize.Small:
                 case PinSize.Medium:
-                    pinSize += 1;
+                    PinSize += 1;
                     break;
                 default:
-                    pinSize = PinSize.Small;
+                    PinSize = PinSize.Small;
                     break;
             }
         }
 
         public void TogglePersistentOn()
         {
-            persistentOn = !persistentOn;
+            PersistentOn = !PersistentOn;
         }
-        
-        public void ToggleColor()
-        {
-            IconColorIndex = (IconColorIndex + 1) % CoOpMap.colorList.Length;
-        }
-        
     }
 }

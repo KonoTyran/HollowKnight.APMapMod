@@ -13,7 +13,8 @@ namespace APMapMod
         {
             { "Archipelago.HollowKnight", null },
             { "ItemChanger", null },
-            { "Vasi", null }
+            { "Vasi", null },
+            { "Satchel", null }
         };
 
         public static Dictionary<string, Assembly> optionalDependencies = new()

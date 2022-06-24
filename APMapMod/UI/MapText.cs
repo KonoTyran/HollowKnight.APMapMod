@@ -147,7 +147,7 @@ namespace APMapMod.UI
         {
             string styleText = $"Style (ctrl-4): ";
 
-            switch (APMapMod.GS.pinStyle)
+            switch (APMapMod.GS.PinStyle)
             {
                 case PinStyle.Normal:
                     styleText += "normal";
@@ -173,7 +173,7 @@ namespace APMapMod.UI
         {
             string sizeText = $"Size (ctrl-5): ";
 
-            switch (APMapMod.GS.pinSize)
+            switch (APMapMod.GS.PinSize)
             {
                 case PinSize.Small:
                     sizeText += "small";

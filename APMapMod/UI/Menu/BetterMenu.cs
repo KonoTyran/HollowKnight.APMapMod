@@ -19,22 +19,31 @@ internal static class BetterMenu
     private static Menu PrepareMenu(){
         return new Menu("Archipelago Map Mod", new Element[]
         {
-            new TextPanel("Enter the Red Blue and Green values for your icon color", 800f),
+            new TextPanel("Enter the Red Green and Blue values for your icon color", 800f),
             new CustomSlider(
                 "Red",
-                r=> APMapMod.GS.IconColor.r = Mathf.RoundToInt(r),
-                () => APMapMod.GS.IconColor.r
-            ) { minValue = 0, maxValue = 255, wholeNumbers = true},
+                r=> APMapMod.GS.IconColorR = Mathf.RoundToInt(r),
+                () => APMapMod.GS.IconColorR,
+                0,
+                255,
+                true
+                ),
             new CustomSlider(
                 "Green",
-                g=> APMapMod.GS.IconColor.g = Mathf.RoundToInt(g) ,
-                () => APMapMod.GS.IconColor.g
-            ) { minValue = 0, maxValue = 255, wholeNumbers = true},
+                g=> APMapMod.GS.IconColorG = Mathf.RoundToInt(g) ,
+                () => APMapMod.GS.IconColorG,
+                0,
+                255,
+                true
+                ),
             new CustomSlider(
-            "Blue",
-            b=> APMapMod.GS.IconColor.b = Mathf.RoundToInt(b),
-            () => APMapMod.GS.IconColor.b
-            ) { minValue = 0, maxValue = 255, wholeNumbers = true},
+                "Blue", 
+                b=> APMapMod.GS.IconColorB = Mathf.RoundToInt(b), 
+                () => APMapMod.GS.IconColorB ,
+                0,
+                255,
+                true
+            )
         });
     }
 }

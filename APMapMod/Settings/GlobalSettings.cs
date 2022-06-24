@@ -1,5 +1,4 @@
-﻿using APMapMod.Map;
-using APMapMod.Util;
+﻿using Newtonsoft.Json;
 using UnityEngine;
 
 namespace APMapMod.Settings
@@ -27,7 +26,20 @@ namespace APMapMod.Settings
 
         public bool PersistentOn = false;
 
-        public (int r, int g, int b) IconColor = Color.white.ToTuple();
+        public int IconColorR = 255, IconColorG = 255, IconColorB = 255;
+        
+        [JsonIgnore]
+        public Color IconColor
+        {
+            get => new(IconColorR, IconColorG, IconColorB);
+            set
+            {
+                IconColorR = Mathf.RoundToInt(value.r); 
+                IconColorG = Mathf.RoundToInt(value.g); 
+                IconColorB = Mathf.RoundToInt(value.b); 
+                
+            }
+        }
 
         public void TogglePinStyle()
         {

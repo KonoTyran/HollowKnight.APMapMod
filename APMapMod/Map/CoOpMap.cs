@@ -57,11 +57,6 @@ namespace APMapMod.Map {
         /// Whether my current possition has been updated since I last sent it.
         /// </summary>
         private bool _sendNewPos;
-        
-        public static Color[] colorList = {Color.white, Color.gray, Color.green, Color.magenta, Color.red, Color.yellow,
-            Color.blue, Color.cyan, new(1f,.75294f,.796078f), new(.5f,0f,0f), new(1f,.388235f,0f),
-            new(.5450980f,0f,.5f)
-        };
 
         public static bool white_palace = false;
         public static bool gods_glory = false;
@@ -111,7 +106,7 @@ namespace APMapMod.Map {
         internal void EnableUpdates()
         {
             _playerList.Add(_netClient.ConnectionInfo.Uuid,0);
-            OnPlayerMapUpdate(0, _myPos, APMapMod.GS.IconColor.ToColor());
+            OnPlayerMapUpdate(0, _myPos, APMapMod.GS.IconColor);
             StartCoroutine(SendPacketRoutine());
             StartCoroutine(UpdatePlayersRoutine());
         }
@@ -130,7 +125,7 @@ namespace APMapMod.Map {
         private void SendUpdatePacket()
         {
             if (!APMapMod.Instance.Session.Socket.Connected) return;
-            var color =  APMapMod.GS.IconColor.ToColor();
+            var color =  APMapMod.GS.IconColor;
             var bounce = new BouncePacket
             {
                 Games = new List<string>
@@ -259,7 +254,7 @@ namespace APMapMod.Map {
                 _lastPosition = newPosition;
                 _sendNewPos = true;
                 
-                OnPlayerMapUpdate(0,_myPos, APMapMod.GS.IconColor.ToColor());
+                OnPlayerMapUpdate(0,_myPos, APMapMod.GS.IconColor);
             }
         }
 

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Archipelago.MultiClient.Net;
 using UnityEngine;
+using Random = System.Random;
 
 namespace APMapMod
 {
@@ -84,6 +85,13 @@ namespace APMapMod
             Archipelago.HollowKnight.Archipelago.OnArchipelagoGameEnded += Unhook;
             On.GameManager.SetGameMap += GameManager_SetGameMap;
 
+            if (GS.IconColorR == -1)
+            {
+                //default value lets randomize it!
+                var r = new Random(DateTime.Now.Second);
+                GS.IconColor = new Color(r.Next(255) / 255f, r.Next(255)/255f, r.Next(255)/255f);
+            }
+            
             Log("Initialization complete.");
         }
 

@@ -26,17 +26,17 @@ namespace APMapMod.Settings
 
         public bool PersistentOn = false;
 
-        public int IconColorR = 255, IconColorG = 255, IconColorB = 255;
+        public int IconColorR = -1, IconColorG = -1, IconColorB = -1;
         
         [JsonIgnore]
         public Color IconColor
         {
-            get => new(IconColorR, IconColorG, IconColorB);
+            get => new(IconColorR / 255f, IconColorG / 255f, IconColorB / 255f);
             set
             {
-                IconColorR = Mathf.RoundToInt(value.r); 
-                IconColorG = Mathf.RoundToInt(value.g); 
-                IconColorB = Mathf.RoundToInt(value.b); 
+                IconColorR = Mathf.RoundToInt(value.r * 255);
+                IconColorG = Mathf.RoundToInt(value.g * 255); 
+                IconColorB = Mathf.RoundToInt(value.b * 255); 
                 
             }
         }

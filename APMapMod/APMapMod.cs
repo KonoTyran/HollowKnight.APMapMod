@@ -8,9 +8,9 @@ using Modding;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using APMapMod.Util;
 using Archipelago.MultiClient.Net;
 using UnityEngine;
-using Random = System.Random;
 
 namespace APMapMod
 {
@@ -87,10 +87,12 @@ namespace APMapMod
 
             if (GS.IconColorR == -1)
             {
-                //default value lets randomize it!
-                var r = new Random(DateTime.Now.Second);
-                GS.IconColor = new Color(r.Next(255) / 255f, r.Next(255)/255f, r.Next(255)/255f);
+                // default value lets randomize it!
+                GS.IconColor= ColorUtil.GetRandomLightColor();
             }
+            
+            // Add a Pause Menu GUI, map text UI and transition helper text
+            GUI.Hook();
             
             Log("Initialization complete.");
         }
@@ -143,8 +145,9 @@ namespace APMapMod
             // Immediately update Map on scene change
             Quill.Hook();
 
-            // Add a Pause Menu GUI, map text UI and transition helper text
-            GUI.Hook();
+            // temporaraly moving this ot mod init to see if this helps load images in the main menu.
+            // // Add a Pause Menu GUI, map text UI and transition helper text
+            // GUI.Hook();
 
             // Add keyboard shortcut control
             InputListener.InstantiateSingleton();

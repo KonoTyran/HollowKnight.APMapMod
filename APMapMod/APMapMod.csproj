@@ -230,6 +230,7 @@
     <EmbeddedResource Include="Resources\GUI\DropdownBG.png" />
     <EmbeddedResource Include="Resources\GUI\UncheckedBG.png" />
     <EmbeddedResource Include="Resources\GUI\LookupBG.png" />
+    <EmbeddedResource Include="Resources\GUI\CompassIcon.png" />
     <EmbeddedResource Include="Resources\fixedMapZones.json" />
     <EmbeddedResource Include="Resources\pins.json" />
     <EmbeddedResource Include="Resources\pinsAM.json" />

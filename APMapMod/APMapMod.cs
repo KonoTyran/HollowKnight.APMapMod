@@ -40,6 +40,8 @@ namespace APMapMod
         {
             Log("Initializing...");
 
+            GUIController.Setup();
+            
             Instance = this;
 
             Dependencies.GetDependencies();
@@ -90,10 +92,7 @@ namespace APMapMod
                 // default value lets randomize it!
                 GS.IconColor= ColorUtil.GetRandomLightColor();
             }
-            
-            // Add a Pause Menu GUI, map text UI and transition helper text
-            GUI.Hook();
-            
+
             Log("Initialization complete.");
         }
 
@@ -102,20 +101,21 @@ namespace APMapMod
             orig(self, goGameMap);
 
             Log("Fetching MultiClient Session.");
-            try
-            {
-                var ap = Archipelago.HollowKnight.Archipelago.Instance;
-                var apType = ap.GetType();
-                var prop = apType.GetField("session", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+            // try
+            // {
+            //     var ap = Archipelago.HollowKnight.Archipelago.Instance;
+            //     var apType = ap.GetType();
+            //     var prop = apType.GetField("session", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+            //
+            //     Session = (ArchipelagoSession) prop.GetValue(ap);
+            //     Log("Success, enabling Co-Op integration.");
+            // }
+            // catch (Exception)
+            // {
+            //     Log("Error Fetching Session, disabling Co-Op integration.");
+            // }
 
-                Session = (ArchipelagoSession) prop.GetValue(ap);
-                Log("Success, enabling Co-Op integration.");
-            }
-            catch (Exception)
-            {
-                Log("Error Fetching Session, disabling Co-Op integration.");
-            }
-            
+            Session = Archipelago.HollowKnight.Archipelago.Instance.session;
             CoOpMap = goGameMap.AddComponent<CoOpMap>();
         }
 
@@ -126,6 +126,9 @@ namespace APMapMod
             // Track when items are picked up/Geo Rocks are broken
             ItemTracker.Hook();
             GeoRockTracker.Hook();
+            
+            // Track when Hints are given in AP
+            HintTracker.Hook();
 
             // Remove Map Markers from the Shop
             ShopChanger.Hook();
@@ -139,15 +142,14 @@ namespace APMapMod
             // Allow the full Map to be toggled
             FullMap.Hook();
 
+            // Add a Pause Menu GUI, map text UI and transition helper text
+            GUI.Hook();
+            
             // Disable Vanilla Pins when mod is enabled
             PinsVanilla.Hook();
 
             // Immediately update Map on scene change
             Quill.Hook();
-
-            // temporaraly moving this ot mod init to see if this helps load images in the main menu.
-            // // Add a Pause Menu GUI, map text UI and transition helper text
-            // GUI.Hook();
 
             // Add keyboard shortcut control
             InputListener.InstantiateSingleton();

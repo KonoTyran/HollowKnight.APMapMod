@@ -36,7 +36,8 @@ namespace APMapMod.UI
             Canvas = _canvas;
             _mapDisplayPanel = new CanvasPanel
                 (_canvas, GUIController.Instance.Images["ButtonsMenuBG"], new Vector2(0f, 1030f), new Vector2(1346f, 0f), new Rect(0f, 0f, 0f, 0f));
-            _mapDisplayPanel.AddText("Player Icons", "", new Vector2(-540f, 0f), Vector2.zero, GUIController.Instance.TrajanNormal, 14, FontStyle.Normal, TextAnchor.UpperCenter);
+            //_mapDisplayPanel.AddText("Player Icons", "", new Vector2(-540f, 0f), Vector2.zero, GUIController.Instance.TrajanNormal, 14, FontStyle.Normal, TextAnchor.UpperCenter);
+            _mapDisplayPanel.AddText("Icon Visibility", "", new Vector2(-540f, 0f), Vector2.zero, GUIController.Instance.TrajanNormal, 14, FontStyle.Normal, TextAnchor.UpperCenter);
             _mapDisplayPanel.AddText("Randomized", "", new Vector2(-270f, 0f), Vector2.zero, GUIController.Instance.TrajanNormal, 14, FontStyle.Normal, TextAnchor.UpperCenter);
             _mapDisplayPanel.AddText("Others", "", new Vector2(0f, 0f), Vector2.zero, GUIController.Instance.TrajanNormal, 14, FontStyle.Normal, TextAnchor.UpperCenter);
             _mapDisplayPanel.AddText("Style", "", new Vector2(270f, 0f), Vector2.zero, GUIController.Instance.TrajanNormal, 14, FontStyle.Normal, TextAnchor.UpperCenter);
@@ -69,7 +70,8 @@ namespace APMapMod.UI
             _mapDisplayPanel.SetActive(!LockToggleEnable && APMapMod.LS.ModEnabled, false);
             _refreshDisplayPanel.SetActive(LockToggleEnable, false);
 
-            SetPlayerIcons();
+            //SetPlayerIcons();
+            SetIconsVisibility();
             SetStyle();
             SetRandomized();
             SetOthers();
@@ -77,22 +79,52 @@ namespace APMapMod.UI
             SetRefresh();
         }
 
-        private static void SetPlayerIcons()
+        // private static void SetPlayerIcons()
+        // {
+        //     string playerIconsText = $"Player Icons (ctrl-1): ";
+        //
+        //     if (APMapMod.LS.IconVisibility)
+        //     {
+        //         _mapDisplayPanel.GetText("Player Icons").SetTextColor(Color.green);
+        //         playerIconsText += "on";
+        //     }
+        //     else
+        //     {
+        //         _mapDisplayPanel.GetText("Player Icons").SetTextColor(Color.white);
+        //         playerIconsText += "off";
+        //     }
+        //
+        //     _mapDisplayPanel.GetText("Player Icons").UpdateText(playerIconsText);
+        // }
+
+        private static void SetIconsVisibility()
         {
-            string playerIconsText = $"Player Icons (ctrl-1): ";
-        
-            if (APMapMod.LS.PlayerIconsOn)
+            string visibilityText = $"Player Icons (ctrl-1): ";
+
+            switch (APMapMod.LS.IconVisibility)
             {
-                _mapDisplayPanel.GetText("Player Icons").SetTextColor(Color.green);
-                playerIconsText += "on";
+                case IconVisibility.Both:
+                    _mapDisplayPanel.GetText("Icon Visibility").SetTextColor(Color.green);
+                    visibilityText += "Both";
+                    break;
+
+                case IconVisibility.Own:
+                    _mapDisplayPanel.GetText("Icon Visibility").SetTextColor(Color.yellow);
+                    visibilityText += "Own";
+                    break;
+
+                case IconVisibility.Others:
+                    _mapDisplayPanel.GetText("Icon Visibility").SetTextColor(Color.yellow);
+                    visibilityText += "Others";
+                    break;
+
+                case IconVisibility.None:
+                    _mapDisplayPanel.GetText("Icon Visibility").SetTextColor(Color.white);
+                    visibilityText += "None";
+                    break;
             }
-            else
-            {
-                _mapDisplayPanel.GetText("Player Icons").SetTextColor(Color.white);
-                playerIconsText += "off";
-            }
-        
-            _mapDisplayPanel.GetText("Player Icons").UpdateText(playerIconsText);
+            
+            _mapDisplayPanel.GetText("Icon Visibility").UpdateText(visibilityText);
         }
 
         private static void SetRandomized()

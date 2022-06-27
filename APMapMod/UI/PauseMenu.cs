@@ -3,7 +3,6 @@ using APMapMod.Data;
 using APMapMod.Map;
 using APMapMod.Settings;
 using System.Collections.Generic;
-using APMapMod.Util;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,12 +15,14 @@ namespace APMapMod.UI
 
         private static readonly Dictionary<string, (UnityAction<string>, Vector2)> _mainButtons = new()
         {
-            ["Player Icons"] = (PlayerIconsClicked, new Vector2(100f, 0f)),
+            ["Icon Visibility"] = (IconVisibilityClicked, new Vector2(100f, 0f)),
             ["Randomized"] = (RandomizedClicked, new Vector2(200f, 0f)),
             ["Others"] = (OthersClicked, new Vector2(300f, 0f)),
             ["Style"] = (StyleClicked, new Vector2(0f, 30f)),
             ["Size"] = (SizeClicked, new Vector2(100f, 30f)),
             ["Mode"] = (ModeClicked, new Vector2(200f, 30f)),
+            //["Player Icons"] = (PlayerIconsClicked, new Vector2(100f, 60f)),
+            //["Icon Visibility"] = (IconVisibilityClicked, new Vector2(200f, 60f)),
         };
 
         private static CanvasPanel _mapControlPanel;
@@ -195,13 +196,14 @@ namespace APMapMod.UI
             if (GameManager.instance.gameMap == null) return;
 
             UpdateEnable();
-            UpdatePlayerIcons();
+            //UpdatePlayerIcons();
             UpdateRandomized();
             UpdateOthers();
             UpdateStyle();
             UpdateSize();
             UpdateMode();
             UpdatePoolsPanel();
+            UpdateIconVisibility();
 
             foreach (string group in DataLoader.usedPoolGroups)
             {
@@ -243,26 +245,63 @@ namespace APMapMod.UI
                 );
         }
 
-        public static void PlayerIconsClicked(string buttonName)
+        // public static void PlayerIconsClicked(string buttonName)
+        // {
+        //     APMapMod.LS.TogglePlayerIcons();
+        //     
+        //     UpdateGUI();
+        //     MapText.SetTexts();
+        // }
+
+        // private static void UpdatePlayerIcons()
+        // {
+        //     _mapControlPanel.GetButton("Player Icons").SetTextColor
+        //         (
+        //             APMapMod.LS.PlayerIconsOn ? Color.green : Color.white
+        //         );
+        //     _mapControlPanel.GetButton("Player Icons").UpdateText
+        //         (
+        //             APMapMod.LS.PlayerIconsOn ? "Player Icons:\non" : "Player Icons:\noff"
+        //         );
+        // }
+        
+        public static void IconVisibilityClicked(string buttonName)
         {
-            APMapMod.LS.TogglePlayerIcons();
-            
+            APMapMod.LS.ToggleIconVisibility();
             UpdateGUI();
             MapText.SetTexts();
         }
 
-        private static void UpdatePlayerIcons()
+        private static void UpdateIconVisibility()
         {
-            _mapControlPanel.GetButton("Player Icons").SetTextColor
-                (
-                    APMapMod.LS.PlayerIconsOn ? Color.green : Color.white
-                );
-            _mapControlPanel.GetButton("Player Icons").UpdateText
-                (
-                    APMapMod.LS.PlayerIconsOn ? "Player Icons:\non" : "Player Icons:\noff"
-                );
-        }
+            string visibilityText = $"Player Icons:\n";
 
+            switch (APMapMod.LS.IconVisibility)
+            {
+                case IconVisibility.Both:
+                    _mapControlPanel.GetButton("Icon Visibility").SetTextColor(Color.green);
+                    visibilityText += "Both";
+                    break;
+                
+                case IconVisibility.Own:
+                    _mapControlPanel.GetButton("Icon Visibility").SetTextColor(Color.yellow);
+                    visibilityText += "Own";
+                    break;
+                
+                case IconVisibility.Others:
+                    _mapControlPanel.GetButton("Icon Visibility").SetTextColor(Color.yellow);
+                    visibilityText += "Others";
+                    break;
+                
+                case IconVisibility.None:
+                    _mapControlPanel.GetButton("Icon Visibility").SetTextColor(Color.white);
+                    visibilityText += "None";
+                    break;
+            }
+            
+            _mapControlPanel.GetButton("Icon Visibility").UpdateText(visibilityText);
+        }
+        
         public static void RandomizedClicked(string buttonName)
         {
             APMapMod.LS.ToggleRandomizedOn();

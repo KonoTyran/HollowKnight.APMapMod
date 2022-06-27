@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+using System.Globalization;
 using APMapMod.Concurrency;
 using APMapMod.Settings;
 using APMapMod.Util;
@@ -9,8 +10,10 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
 using Modding;
 using Newtonsoft.Json.Linq;
+using Satchel;
 using UnityEngine;
 using WebSocketSharp;
+using static System.Threading.ThreadPool;
 using Object = UnityEngine.Object;
 
 namespace APMapMod.Map {
@@ -81,9 +84,8 @@ namespace APMapMod.Map {
 
             // Register when the player opens their map, which is when the compass position is calculated 
             On.GameMap.PositionCompass += OnPositionCompass;
-
-            if(_ls.PlayerIconsOn)
-                EnableUpdates();
+            
+            EnableUpdates();
         }
         
         public void OnDisable() {
@@ -106,7 +108,10 @@ namespace APMapMod.Map {
         internal void EnableUpdates()
         {
             _playerList.Add(_netClient.ConnectionInfo.Uuid,0);
-            OnPlayerMapUpdate(0, _myPos, APMapMod.GS.IconColor);
+            OnPlayerMapUpdate(0,
+                APMapMod.LS.IconVisibility is IconVisibility.Both or IconVisibility.Own ? _myPos : Vector2.zero,
+                APMapMod.GS.IconColor);
+
             StartCoroutine(SendPacketRoutine());
             StartCoroutine(UpdatePlayersRoutine());
         }
@@ -116,31 +121,33 @@ namespace APMapMod.Map {
             _myPos = Vector2.zero;
             _playerList.Clear();
             StopAllCoroutines();
-            var thread = new Thread(SendUpdatePacket);
-            thread.Start();
+            SendUpdatePacket();
             APMapMod.Instance.CoOpMap.RemoveAllIcons();
         }
 
 
         private void SendUpdatePacket()
         {
-            if (!APMapMod.Instance.Session.Socket.Connected) return;
-            var color =  APMapMod.GS.IconColor;
-            var bounce = new BouncePacket
+            QueueUserWorkItem((_) =>
             {
-                Games = new List<string>
+                if (!APMapMod.Instance.Session.Socket.Connected) return;
+                var color =  APMapMod.GS.IconColor;
+                var bounce = new BouncePacket
                 {
-                    "Hollow Knight"
-                },
-                Data = new Dictionary<string, JToken>
-                {
-                    {"type", "apmapmodcoop"},
-                    {"uuid", _netClient.ConnectionInfo.Uuid},
-                    {"pos", $"{_myPos.x}/{_myPos.y}"},
-                    {"color", $"{color.r}/{color.g}/{color.b}/{color.a}"},
-                }
-            };
-            APMapMod.Instance.Session.Socket.SendPacketAsync(bounce);
+                    Games = new List<string>
+                    {
+                        "Hollow Knight"
+                    },
+                    Data = new Dictionary<string, JToken>
+                    {
+                        {"type", "apmapmodcoop"},
+                        {"uuid", _netClient.ConnectionInfo.Uuid},
+                        {"pos", $"{Convert.ToSingle(_myPos.x, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(_myPos.y, CultureInfo.InvariantCulture.NumberFormat)}"},
+                        {"color", $"{Convert.ToSingle(color.r, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(color.g, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(color.b, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(color.a, CultureInfo.InvariantCulture.NumberFormat)}"},
+                    }
+                };
+                APMapMod.Instance.Session.Socket.SendPacketAsync(bounce);
+            });
         }
         
         private IEnumerator SendPacketRoutine()
@@ -148,10 +155,8 @@ namespace APMapMod.Map {
             while (true)
             {
                 yield return new WaitForSecondsRealtime(2);
-                if (!APMapMod.LS.PlayerIconsOn || !_sendNewPos) continue;
-                
-                var thread = new Thread(SendUpdatePacket);
-                thread.Start();
+                if (!_sendNewPos) continue;
+                SendUpdatePacket();
                 _sendNewPos = false;
             }
         }  
@@ -211,8 +216,8 @@ namespace APMapMod.Map {
             if (bounce.Data.TryGetValue("pos", out var posJToken))
             {
                 var p = posJToken.ToString().Split('/');
-                pos.x = Mathf.Clamp(float.Parse(p[0]), -100 , 100);
-                pos.y = Mathf.Clamp(float.Parse(p[1]), -100 , 100);
+                pos.x = Mathf.Clamp(float.Parse(p[0], CultureInfo.InvariantCulture.NumberFormat), -100 , 100);
+                pos.y = Mathf.Clamp(float.Parse(p[1], CultureInfo.InvariantCulture.NumberFormat), -100 , 100);
             }
             else return;
 
@@ -220,12 +225,15 @@ namespace APMapMod.Map {
             if (bounce.Data.TryGetValue("color", out var colorJToken))
             {
                 var c = colorJToken.ToString().Split('/');
-                color = new Color(float.Parse(c[0]), float.Parse(c[1]), float.Parse(c[2]), float.Parse(c[3]));
+                color = new Color(float.Parse(c[0], CultureInfo.InvariantCulture.NumberFormat), float.Parse(c[1], CultureInfo.InvariantCulture.NumberFormat), float.Parse(c[2], CultureInfo.InvariantCulture.NumberFormat), float.Parse(c[3], CultureInfo.InvariantCulture.NumberFormat));
             }
             else return;
             
-            APMapMod.Instance.Log($"updating player {id} to pos: {pos.ToString()} with color {color.ToString()}");
-            _locationUpdates[id] = (pos, color);
+            APMapMod.Instance.LogFine($"updating player {id} to pos: {pos.ToString()} with color {color.ToString()}");
+            if (APMapMod.LS.IconVisibility is IconVisibility.Both or IconVisibility.Others)
+                _locationUpdates[id] = (pos, color);
+            else
+                _locationUpdates[id] = (Vector2.zero, color);
         }
 
         /// <summary>
@@ -237,24 +245,16 @@ namespace APMapMod.Map {
             // Execute the original method
             orig(self);
 
-            // If we are not connect, we don't have to send anything
-            if (!_netClient.Socket.Connected || !_ls.PlayerIconsOn) {
-                return;
-            }
-
             var newPosition = GetMapLocation();
+            _myPos = new Vector2(newPosition.x, newPosition.y);
+            OnPlayerMapUpdate(0,
+                APMapMod.LS.IconVisibility is IconVisibility.Both or IconVisibility.Own ? _myPos : Vector2.zero,
+                APMapMod.GS.IconColor);
 
-            // Only send update if the position changed
-            if (newPosition != _lastPosition) {
-                var vec2 = new Vector2(newPosition.x, newPosition.y);
-
-                _myPos = vec2;
-
-                // Update the last position, since it changed
+            if (Vector2.Distance(_lastPosition, _myPos) > .25f) {
+                // Update the last position, and flag a new send because it changed.
                 _lastPosition = newPosition;
                 _sendNewPos = true;
-                
-                OnPlayerMapUpdate(0,_myPos, APMapMod.GS.IconColor);
             }
         }
 
@@ -478,6 +478,10 @@ namespace APMapMod.Map {
                 gameMap.gameObject.transform
             );
             mapIcon.SetActive(_displayingIcons);
+            
+            //scale all other player icons to half size.
+            if(id != 0)
+                mapIcon.SetScale(.5f,.5f);
 
             // Subtract ID * 0.01 from the Z position to prevent Z-fighting with the icons
             var unityPosition = new Vector3(

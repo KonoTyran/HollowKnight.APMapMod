@@ -170,8 +170,14 @@ namespace APMapMod.Data
                     return "Dreamers";
                     
                 case "Mothwing_Cloak":
+                case "Left_Mothwing_Cloak":
+                case "Right_Mothwing_Cloak":
                 case "Mantis_Claw":
+                case "Left_Mantis_Claw":
+                case "Right_Mantis_Claw":
                 case "Crystal_Heart":
+                case "Left_Crystal_Heart":
+                case "Right_Crystal_Heart":
                 case "Monarch_Wings":
                 case "Shade_Cloak":
                 case "Isma's_Tear":
@@ -187,6 +193,9 @@ namespace APMapMod.Data
                 case "Cyclone_Slash":
                 case "Dash_Slash":
                 case "Great_Slash":
+                case "Left_Slash":
+                case "Up_Slash":
+                case "Right_Slash":
                     return "Skills";
                     
                 case "Baldur_Shell":
@@ -245,6 +254,7 @@ namespace APMapMod.Data
                 case "Collector's_Map":
                 case "City_Crest":
                 case "Tram_Pass":
+                case "Elevator_Pass":
                     return "Keys";
                     
                 case "Mask_Shard":
@@ -331,6 +341,21 @@ namespace APMapMod.Data
 
             var slotOptions = Archipelago.HollowKnight.Archipelago.Instance.SlotOptions;
 
+            switch (placement.Name)
+            {
+                case "Elevator_Pass":
+                    return slotOptions.RandomizeElevatorPass;
+                case "Right_Mothwing_Cloak":
+                case "Left_Mothwing_Cloak":
+                    return slotOptions.SplitMothwingCloak;
+                case "Right_Crystal_Heart":
+                case "Left_Crystal_Heart":
+                    return slotOptions.SplitCrystalHeart;
+                case "Right_Mantis_Claw":
+                case "Left_Mantis_Claw":
+                    return slotOptions.SplitMantisClaw;
+            }
+
             switch (placement.GetPlacementGroup())
             {
                 case "Dreamers":
@@ -378,6 +403,14 @@ namespace APMapMod.Data
                 case "Boss Geo":
                     return slotOptions.RandomizeBossGeo;
                 case "Soul Totems":
+                    // if (placement.Name.Contains("White_Palace"))
+                    // {
+                    //     return slotOptions.WhitePalaceLocations;
+                    // }
+                    // if (placement.Name.Contains("Path_Of_Pain"))
+                    // {
+                    //     return slotOptions.PathOfPainLocations;
+                    // }
                     return slotOptions.RandomizeSoulTotems;
                 case "Lore Tablets":
                     return slotOptions.RandomizeLoreTablets;

@@ -21,6 +21,14 @@ namespace APMapMod.Settings
         Mixed
     }
 
+    public enum IconVisibility
+    {
+        Own,
+        Others,
+        Both,
+        None
+    }
+
     public class SettingPair
     {
         public SettingPair(string poolGroup, PoolGroupState state)
@@ -51,6 +59,8 @@ namespace APMapMod.Settings
         public bool othersOn = false;
 
         public bool NewSettings = true;
+
+        public IconVisibility IconVisibility = IconVisibility.Both;
 
         public List<SettingPair> PoolGroupSettings = new();
 
@@ -152,6 +162,29 @@ namespace APMapMod.Settings
             //{
             //    APMapMod.Instance.LogWarn($"Tried to set a PoolGroup setting, but the key {poolGroup} was missing");
             //}
+        }
+        
+        public void ToggleIconVisibility()
+        {
+            switch (IconVisibility)
+            {
+                case IconVisibility.Both:
+                    IconVisibility = IconVisibility.None;
+                    //APMapMod.Instance.CoOpMap.
+                    break;
+
+                case IconVisibility.None:
+                    IconVisibility = IconVisibility.Own;
+                    break;
+
+                case IconVisibility.Own:
+                    IconVisibility = IconVisibility.Others;
+                    break;
+
+                case IconVisibility.Others:
+                    IconVisibility = IconVisibility.Both;
+                    break;
+            }
         }
     }
 }

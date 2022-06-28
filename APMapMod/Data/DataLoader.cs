@@ -159,43 +159,45 @@ namespace APMapMod.Data
             return GetPlacementGroup(placement.Name);
         }
 
-        public static string GetPlacementGroup(String name)
+        public static string GetPlacementGroup(string name)
         {
             switch (name.Split('-')[0])
             {
-                case "Lurien":
-                case "Monomon":
-                case "Herrah":
-                case "World_Sense":
+                case ItemNames.Lurien:
+                case ItemNames.Monomon:
+                case ItemNames.Herrah:
+                case ItemNames.World_Sense:
                     return "Dreamers";
                     
-                case "Mothwing_Cloak":
-                case "Left_Mothwing_Cloak":
-                case "Right_Mothwing_Cloak":
-                case "Mantis_Claw":
-                case "Left_Mantis_Claw":
-                case "Right_Mantis_Claw":
-                case "Crystal_Heart":
-                case "Left_Crystal_Heart":
-                case "Right_Crystal_Heart":
-                case "Monarch_Wings":
-                case "Shade_Cloak":
-                case "Isma's_Tear":
-                case "Dream_Nail":
-                case "Awoken_Dream_Nail":
-                case "Dream_Gate":
-                case "Vengeful_Spirit":
-                case "Shade_Soul":
-                case "Desolate_Dive":
-                case "Descending_Dark":
-                case "Howling_Wraiths":
-                case "Abyss_Shriek":
-                case "Cyclone_Slash":
-                case "Dash_Slash":
-                case "Great_Slash":
-                case "Left_Slash":
-                case "Up_Slash":
-                case "Right_Slash":
+                case ItemNames.Mothwing_Cloak:
+                case ItemNames.Left_Mothwing_Cloak:
+                case ItemNames.Right_Mothwing_Cloak:
+                case LocationNames.Split_Mothwing_Cloak:
+                case ItemNames.Mantis_Claw:
+                case ItemNames.Left_Mantis_Claw:
+                case ItemNames.Right_Mantis_Claw:
+                case ItemNames.Crystal_Heart:
+                case ItemNames.Left_Crystal_Heart:
+                case ItemNames.Right_Crystal_Heart:
+                case LocationNames.Split_Crystal_Heart:
+                case ItemNames.Monarch_Wings:
+                case ItemNames.Shade_Cloak:
+                case ItemNames.Ismas_Tear:
+                case ItemNames.Dream_Nail:
+                case ItemNames.Awoken_Dream_Nail:
+                case ItemNames.Dream_Gate:
+                case ItemNames.Vengeful_Spirit:
+                case ItemNames.Shade_Soul:
+                case ItemNames.Desolate_Dive:
+                case ItemNames.Descending_Dark:
+                case ItemNames.Howling_Wraiths:
+                case ItemNames.Abyss_Shriek:
+                case ItemNames.Cyclone_Slash:
+                case ItemNames.Dash_Slash:
+                case ItemNames.Great_Slash:
+                case ItemNames.Leftslash:
+                case ItemNames.Upslash:
+                case ItemNames.Rightslash:
                     return "Skills";
                     
                 case "Baldur_Shell":
@@ -246,31 +248,35 @@ namespace APMapMod.Data
                 case "Fragile_Strength":
                     return "Charms";
                         
-                case "Simple_Key":
-                case "Shopkeeper's_Key":
-                case "Love_Key":
-                case "King's_Brand":
-                case "Godtuner":
-                case "Collector's_Map":
-                case "City_Crest":
-                case "Tram_Pass":
-                case "Elevator_Pass":
+                case ItemNames.Simple_Key:
+                case ItemNames.Shopkeepers_Key:
+                case ItemNames.Love_Key:
+                case ItemNames.Kings_Brand:
+                case ItemNames.Godtuner:
+                case ItemNames.Collectors_Map:
+                case ItemNames.City_Crest:
+                case ItemNames.Tram_Pass:
+                case ItemNames.Elevator_Pass:
                     return "Keys";
                     
-                case "Mask_Shard":
+                case ItemNames.Mask_Shard:
+                case ItemNames.Full_Mask:
+                case ItemNames.Double_Mask_Shard:
                     return "Mask Shards";
 
-                case "Vessel_Fragment":
+                case ItemNames.Vessel_Fragment:
+                case ItemNames.Double_Vessel_Fragment:
+                case ItemNames.Full_Soul_Vessel:
                     return "Vessel Fragments";
                 
-                case "Charm_Notch":
+                case ItemNames.Charm_Notch:
                     return "Charm Notches";
                     
-                case "Pale_Ore":
+                case ItemNames.Pale_Ore:
                     return "Pale Ore";
                     
                 case "Geo_Chest":
-                case "Lumafly_Escape":
+                case ItemNames.Lumafly_Escape:
                     return "Geo Chests";
                     
                 case "Rancid_Egg":
@@ -295,8 +301,8 @@ namespace APMapMod.Data
                     return "Mimics";
                     
                 case "Lifeblood_Cocoon":
-                case "Lifeblood_Cocoon_Large":
-                case "Lifeblood_Cocoon_Small":
+                case ItemNames.Lifeblood_Cocoon_Small:
+                case ItemNames.Lifeblood_Cocoon_Large:
                     return "Lifeblood Cocoons";
                 case "Grimmkin_Flame":
                     return "Grimmkin Flames";
@@ -317,13 +323,13 @@ namespace APMapMod.Data
                 case "Lore_Tablet":
                     return "Lore Tablets";
                     
-                case "Sly":
-                case "Sly_(Key)":
-                case "Salubra":
-                case "Iselda":
-                case "Leg_Eater":
-                case "Seer":
-                case "Grubfather":
+                case LocationNames.Sly:
+                case LocationNames.Sly_Key:
+                case LocationNames.Salubra:
+                case LocationNames.Iselda:
+                case LocationNames.Leg_Eater:
+                case LocationNames.Seer:
+                case LocationNames.Grubfather:
                     return "Shops";
             }
 

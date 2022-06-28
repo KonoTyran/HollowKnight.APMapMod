@@ -85,7 +85,6 @@ namespace APMapMod
             
             Archipelago.HollowKnight.Archipelago.OnArchipelagoGameStarted += Hook;
             Archipelago.HollowKnight.Archipelago.OnArchipelagoGameEnded += Unhook;
-            On.GameManager.SetGameMap += GameManager_SetGameMap;
 
             if (GS.IconColorR == -1)
             {
@@ -94,29 +93,6 @@ namespace APMapMod
             }
 
             Log("Initialization complete.");
-        }
-
-        private void GameManager_SetGameMap(On.GameManager.orig_SetGameMap orig, GameManager self, GameObject goGameMap)
-        {
-            orig(self, goGameMap);
-
-            Log("Fetching MultiClient Session.");
-            // try
-            // {
-            //     var ap = Archipelago.HollowKnight.Archipelago.Instance;
-            //     var apType = ap.GetType();
-            //     var prop = apType.GetField("session", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-            //
-            //     Session = (ArchipelagoSession) prop.GetValue(ap);
-            //     Log("Success, enabling Co-Op integration.");
-            // }
-            // catch (Exception)
-            // {
-            //     Log("Error Fetching Session, disabling Co-Op integration.");
-            // }
-
-            Session = Archipelago.HollowKnight.Archipelago.Instance.session;
-            CoOpMap = goGameMap.AddComponent<CoOpMap>();
         }
 
         private void Hook()
@@ -151,8 +127,13 @@ namespace APMapMod
             // Immediately update Map on scene change
             Quill.Hook();
 
+            // enable player icon tracking.
+            CoOpMap.Hook();
+
             // Add keyboard shortcut control
             InputListener.InstantiateSingleton();
+            
+            Session = Archipelago.HollowKnight.Archipelago.Instance.session;
         }
 
         private void Unhook()
@@ -166,6 +147,7 @@ namespace APMapMod
             PinsVanilla.Unhook();
             Quill.Unhook();
             GUI.Unhook();
+            CoOpMap.UnHook();
             InputListener.DestroySingleton();
         }
 

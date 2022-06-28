@@ -1,6 +1,9 @@
+using System;
+using Archipelago.HollowKnight.IC;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Packets;
 using ItemChanger;
+using ItemChanger.Placements;
 
 namespace APMapMod.Trackers;
 
@@ -27,47 +30,34 @@ public class HintTracker
         if (hint.Item.Player != _session.ConnectionInfo.Slot)
             return;
 
-        var location = _session.Locations.GetLocationNameFromId(hint.Item.Location);
+        var apLocation = _session.Locations.GetLocationNameFromId(hint.Item.Location);
+        var location = apLocation;
+        var item = 0;
         
-        if (location.StartsWith(LocationNames.Leg_Eater))
-        {
-            location = LocationNames.Leg_Eater;
-        }
-        else if (location.StartsWith(LocationNames.Seer))
-        {
-            location = LocationNames.Seer;
-        }
-        else if (location.StartsWith(LocationNames.Iselda))
-        {
-            location = LocationNames.Iselda;
-        }
-        else if (location.StartsWith(LocationNames.Grubfather))
-        {
-            location = LocationNames.Grubfather;
-        }
-        else if (location.StartsWith(LocationNames.Sly_Key))
-        {
-            location = LocationNames.Sly_Key;
-        }
-        else if (location.StartsWith(LocationNames.Sly))
-        {
-            location = LocationNames.Sly;
-        }
-        else if (location.StartsWith(LocationNames.Salubra))
-        {
-            location = LocationNames.Salubra;
-        }
-        else if (location.StartsWith(LocationNames.Egg_Shop))
-        {
-            location = LocationNames.Egg_Shop;
-        }
+        
+        if (apLocation.StartsWith(LocationNames.Leg_Eater)) location = LocationNames.Leg_Eater;
+        else if (apLocation.StartsWith(LocationNames.Seer)) location = LocationNames.Seer;
+        else if (apLocation.StartsWith(LocationNames.Iselda)) location = LocationNames.Iselda;
+        else if (apLocation.StartsWith(LocationNames.Grubfather)) location = LocationNames.Grubfather;
+        else if (apLocation.StartsWith(LocationNames.Sly_Key)) location = LocationNames.Sly_Key;
+        else if (apLocation.StartsWith(LocationNames.Sly)) location = LocationNames.Sly;
+        else if (apLocation.StartsWith(LocationNames.Salubra)) location = LocationNames.Salubra;
+        else if (apLocation.StartsWith(LocationNames.Egg_Shop)) location = LocationNames.Egg_Shop;
 
-        var loc = Finder.GetLocation(location);
-        if (loc != null)
+        if (!apLocation.Equals(location))
         {
-            var placement = ItemChanger.Internal.Ref.Settings.Placements[location];
-            placement.GetTag<Archipelago.HollowKnight.IC.ArchipelagoPlacementTag>().Hinted = true;
-            placement.AddVisitFlag(VisitState.Previewed);
+            var split = apLocation.Split('_');
+            item = int.Parse(split[split.Length-1]) - 1;
         }
+        
+        var placement = ItemChanger.Internal.Ref.Settings.Placements[location];
+        if (placement == null) return;
+        
+        placement.Items[item].GetTag<ArchipelagoItemTag>().Hinted = true;
+        
+        if (placement.Items.Count != 1) return;
+        
+        placement.GetTag<ArchipelagoPlacementTag>().Hinted = true;
+        placement.AddVisitFlag(VisitState.Previewed);
     }
 }

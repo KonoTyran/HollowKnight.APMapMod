@@ -71,6 +71,7 @@ namespace APMapMod.UI
 
         public void Update()
         {
+            if(!Archipelago.HollowKnight.Archipelago.Instance.ArchipelagoEnabled) return;
             try
             {
                 PauseMenu.Update();

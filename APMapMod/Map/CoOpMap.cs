@@ -65,6 +65,39 @@ namespace APMapMod.Map {
         public static bool white_palace = false;
         public static bool gods_glory = false;
 
+        public static void Hook()
+        {
+            On.GameManager.SetGameMap += GameManager_SetGameMap;
+        }
+        
+        public static void UnHook()
+        {
+            On.GameManager.SetGameMap -= GameManager_SetGameMap;
+        }
+        
+        private static void GameManager_SetGameMap(On.GameManager.orig_SetGameMap orig, GameManager self, GameObject goGameMap)
+        {
+            orig(self, goGameMap);
+
+            APMapMod.Instance.LogDebug("Fetching MultiClient Session.");
+            // try
+            // {
+            //     var ap = Archipelago.HollowKnight.Archipelago.Instance;
+            //     var apType = ap.GetType();
+            //     var prop = apType.GetField("session", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+            //
+            //     Session = (ArchipelagoSession) prop.GetValue(ap);
+            //     Log("Success, enabling Co-Op integration.");
+            // }
+            // catch (Exception)
+            // {
+            //     Log("Error Fetching Session, disabling Co-Op integration.");
+            // }
+            
+            APMapMod.Instance.CoOpMap = goGameMap.AddComponent<CoOpMap>();
+        }
+        
+
         public void OnEnable()
         {
             _netClient = APMapMod.Instance.Session;
@@ -271,7 +304,7 @@ namespace APMapMod.Map {
         /// <returns>A Vector3 representing the map location.</returns>
         private Vector3 GetMapLocation() {
             // Get the game manager instance
-            var gameManager = global::GameManager.instance;
+            var gameManager = GameManager.instance;
             // Get the current map zone of the game manager and check whether we are in
             // an area that doesn't shop up on the map
             var currentMapZone = gameManager.GetCurrentMapZone();
@@ -325,40 +358,50 @@ namespace APMapMod.Map {
                 sceneObjectPos.y + areaObjectPos.y,
                 0f
             );
+            try
+            {
+                var size = sceneObject.GetComponent<SpriteRenderer>().sprite.bounds.size;
+                var gameMapScale = gameMap.transform.localScale;
+                
+                Vector3 position;
 
-            var size = sceneObject.GetComponent<SpriteRenderer>().sprite.bounds.size;
-            var gameMapScale = gameMap.transform.localScale;
+                if (gameMap.inRoom)
+                {
+                    position = new Vector3(
+                        currentScenePos.x - size.x / 2.0f + (gameMap.doorX + gameMap.doorOriginOffsetX) /
+                        gameMap.doorSceneWidth *
+                        size.x,
+                        currentScenePos.y - size.y / 2.0f + (gameMap.doorY + gameMap.doorOriginOffsetY) /
+                        gameMap.doorSceneHeight *
+                        gameMapScale.y,
+                        -1f
+                    );
+                }
+                else
+                {
+                    var playerPosition = HeroController.instance.gameObject.transform.position;
+                    
+                    var originOffsetX = ReflectionHelper.GetField<GameMap, float>(gameMap, "originOffsetX");
+                    var originOffsetY = ReflectionHelper.GetField<GameMap, float>(gameMap, "originOffsetY");
+                    var sceneWidth = ReflectionHelper.GetField<GameMap, float>(gameMap, "sceneWidth");
+                    var sceneHeight = ReflectionHelper.GetField<GameMap, float>(gameMap, "sceneHeight");
 
-            Vector3 position;
+                    position = new Vector3(
+                        currentScenePos.x - size.x / 2.0f + (playerPosition.x + originOffsetX) / sceneWidth *
+                        size.x,
+                        currentScenePos.y - size.y / 2.0f + (playerPosition.y + originOffsetY) / sceneHeight *
+                        size.y,
+                        -1f
+                    );
 
-            if (gameMap.inRoom) {
-                position = new Vector3(
-                    currentScenePos.x - size.x / 2.0f + (gameMap.doorX + gameMap.doorOriginOffsetX) /
-                    gameMap.doorSceneWidth *
-                    size.x,
-                    currentScenePos.y - size.y / 2.0f + (gameMap.doorY + gameMap.doorOriginOffsetY) /
-                    gameMap.doorSceneHeight *
-                    gameMapScale.y,
-                    -1f
-                );
-            } else {
-                var playerPosition = HeroController.instance.gameObject.transform.position;
-
-                var originOffsetX = ReflectionHelper.GetField<GameMap, float>(gameMap, "originOffsetX");
-                var originOffsetY = ReflectionHelper.GetField<GameMap, float>(gameMap, "originOffsetY");
-                var sceneWidth = ReflectionHelper.GetField<GameMap, float>(gameMap, "sceneWidth");
-                var sceneHeight = ReflectionHelper.GetField<GameMap, float>(gameMap, "sceneHeight");
-
-                position = new Vector3(
-                    currentScenePos.x - size.x / 2.0f + (playerPosition.x + originOffsetX) / sceneWidth *
-                    size.x,
-                    currentScenePos.y - size.y / 2.0f + (playerPosition.y + originOffsetY) / sceneHeight *
-                    size.y,
-                    -1f
-                );
+                }
+                
+                return position;
             }
-
-            return position;
+            catch
+            {
+                return Vector3.zero;
+            }
         }
 
         /// <summary>

@@ -98,10 +98,10 @@ namespace APMapMod.Map
             }
 
             // Set border color of pin
-            PBC pinBorderColor = PBC.Normal;
+            var pinBorderColor = PBC.Normal;
 
-            AbstractItem item = PD.randoItems.ToArray()[spriteIndex];
-            if (PD.pinLocationState == PLS.Previewed && PD.canPreviewItem)
+            var item = PD.randoItems.ToArray()[spriteIndex];
+            if (PD.pinLocationState == PLS.Previewed || item.GetTag<ArchipelagoItemTag>().Hinted)
             {
                 pinBorderColor = PBC.Previewed;
 

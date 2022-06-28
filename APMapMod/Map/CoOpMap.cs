@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using APMapMod.Concurrency;
 using APMapMod.Settings;
 using APMapMod.Util;
@@ -64,10 +65,11 @@ namespace APMapMod.Map {
         public static bool white_palace = false;
         public static bool gods_glory = false;
 
-        public void OnEnable() {
+        public void OnEnable()
+        {
             _netClient = APMapMod.Instance.Session;
             _ls = APMapMod.LS;
-            
+
             _mapIcons = new ConcurrentDictionary<int, GameObject>();
             _playerList = new Dictionary<string, int>();
             _locationUpdates = new Dictionary<int, (Vector2 pos, Color color)>();
@@ -84,6 +86,13 @@ namespace APMapMod.Map {
 
             // Register when the player opens their map, which is when the compass position is calculated 
             On.GameMap.PositionCompass += OnPositionCompass;
+
+            var newTags = _netClient.ConnectionInfo.Tags.ToList();
+            if (!newTags.Contains("APMapMod"))
+            {
+                newTags.Add("APMapMod");
+                _netClient.UpdateConnectionOptions(newTags.ToArray(), _netClient.ConnectionInfo.ItemsHandlingFlags);
+            }
             
             EnableUpdates();
         }
@@ -134,16 +143,16 @@ namespace APMapMod.Map {
                 var color =  APMapMod.GS.IconColor;
                 var bounce = new BouncePacket
                 {
-                    Games = new List<string>
+                    Tags = new List<string>
                     {
-                        "Hollow Knight"
+                        "APMapMod"
                     },
                     Data = new Dictionary<string, JToken>
                     {
                         {"type", "apmapmodcoop"},
                         {"uuid", _netClient.ConnectionInfo.Uuid},
-                        {"pos", $"{Convert.ToSingle(_myPos.x, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(_myPos.y, CultureInfo.InvariantCulture.NumberFormat)}"},
-                        {"color", $"{Convert.ToSingle(color.r, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(color.g, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(color.b, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToSingle(color.a, CultureInfo.InvariantCulture.NumberFormat)}"},
+                        {"pos", $"{Convert.ToString(_myPos.x, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToString(_myPos.y, CultureInfo.InvariantCulture.NumberFormat)}"},
+                        {"color", $"{Convert.ToString(color.r, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToString(color.g, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToString(color.b, CultureInfo.InvariantCulture.NumberFormat)}/{Convert.ToString(color.a, CultureInfo.InvariantCulture.NumberFormat)}"},
                     }
                 };
                 APMapMod.Instance.Session.Socket.SendPacketAsync(bounce);
@@ -154,7 +163,7 @@ namespace APMapMod.Map {
         {
             while (true)
             {
-                yield return new WaitForSecondsRealtime(2);
+                yield return new WaitForSecondsRealtime(5);
                 if (!_sendNewPos) continue;
                 SendUpdatePacket();
                 _sendNewPos = false;
@@ -182,8 +191,6 @@ namespace APMapMod.Map {
 
         private void netClient_onPacket(ArchipelagoPacketBase packet)
         {
-            if (!_ls.PlayerIconsOn)
-                return;
 
             // check for bounced packet only
             if (packet.PacketType != ArchipelagoPacketType.Bounced)
@@ -216,8 +223,8 @@ namespace APMapMod.Map {
             if (bounce.Data.TryGetValue("pos", out var posJToken))
             {
                 var p = posJToken.ToString().Split('/');
-                pos.x = Mathf.Clamp(float.Parse(p[0], CultureInfo.InvariantCulture.NumberFormat), -100 , 100);
-                pos.y = Mathf.Clamp(float.Parse(p[1], CultureInfo.InvariantCulture.NumberFormat), -100 , 100);
+                pos.x = float.Parse(p[0], CultureInfo.InvariantCulture.NumberFormat);
+                pos.y = float.Parse(p[1], CultureInfo.InvariantCulture.NumberFormat);
             }
             else return;
 

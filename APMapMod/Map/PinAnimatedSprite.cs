@@ -92,8 +92,7 @@ namespace APMapMod.Map
             // Set pool to display
             string pool = PD.locationPoolGroup;
 
-            if (PD.pinLocationState == PLS.Previewed
-                || APMapMod.LS.PlayerIconsOn)
+            if (PD.pinLocationState == PLS.Previewed)
             {
                 pool = PD.locationPoolGroup;
             }

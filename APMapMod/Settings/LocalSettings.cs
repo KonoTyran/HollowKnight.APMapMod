@@ -52,8 +52,6 @@ namespace APMapMod.Settings
 
         public MapMode mapMode = MapMode.FullMap;
 
-        public bool PlayerIconsOn = false;
-
         public bool randomizedOn = true;
 
         public bool othersOn = false;
@@ -90,15 +88,6 @@ namespace APMapMod.Settings
         public void ToggleBench()
         {
             showBenchPins = !showBenchPins;
-        }
-
-        public void TogglePlayerIcons()
-        {
-            PlayerIconsOn = !PlayerIconsOn;
-            if(PlayerIconsOn)
-                APMapMod.Instance.CoOpMap.EnableUpdates();
-            else
-                APMapMod.Instance.CoOpMap.DisableUpdates();
         }
 
         public void ToggleRandomizedOn()

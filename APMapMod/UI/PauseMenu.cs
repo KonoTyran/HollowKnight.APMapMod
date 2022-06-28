@@ -196,7 +196,6 @@ namespace APMapMod.UI
             if (GameManager.instance.gameMap == null) return;
 
             UpdateEnable();
-            //UpdatePlayerIcons();
             UpdateRandomized();
             UpdateOthers();
             UpdateStyle();
@@ -245,26 +244,6 @@ namespace APMapMod.UI
                 );
         }
 
-        // public static void PlayerIconsClicked(string buttonName)
-        // {
-        //     APMapMod.LS.TogglePlayerIcons();
-        //     
-        //     UpdateGUI();
-        //     MapText.SetTexts();
-        // }
-
-        // private static void UpdatePlayerIcons()
-        // {
-        //     _mapControlPanel.GetButton("Player Icons").SetTextColor
-        //         (
-        //             APMapMod.LS.PlayerIconsOn ? Color.green : Color.white
-        //         );
-        //     _mapControlPanel.GetButton("Player Icons").UpdateText
-        //         (
-        //             APMapMod.LS.PlayerIconsOn ? "Player Icons:\non" : "Player Icons:\noff"
-        //         );
-        // }
-        
         public static void IconVisibilityClicked(string buttonName)
         {
             APMapMod.LS.ToggleIconVisibility();

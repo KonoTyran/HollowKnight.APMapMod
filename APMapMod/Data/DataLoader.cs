@@ -3,7 +3,7 @@ using GlobalEnums;
 using ItemChanger;
 using System.Collections.Generic;
 using System.Linq;
-using ItemChanger.Extensions;
+using Archipelago.HollowKnight;
 
 namespace APMapMod.Data
 {
@@ -343,16 +343,16 @@ namespace APMapMod.Data
 
             switch (placement.Name)
             {
-                case "Elevator_Pass":
+                case ItemNames.Elevator_Pass:
                     return slotOptions.RandomizeElevatorPass;
-                case "Right_Mothwing_Cloak":
-                case "Left_Mothwing_Cloak":
+                case ItemNames.Right_Mothwing_Cloak:
+                case ItemNames.Left_Mothwing_Cloak:
                     return slotOptions.SplitMothwingCloak;
-                case "Right_Crystal_Heart":
-                case "Left_Crystal_Heart":
+                case ItemNames.Right_Crystal_Heart:
+                case ItemNames.Left_Crystal_Heart:
                     return slotOptions.SplitCrystalHeart;
-                case "Right_Mantis_Claw":
-                case "Left_Mantis_Claw":
+                case ItemNames.Right_Mantis_Claw:
+                case ItemNames.Left_Mantis_Claw:
                     return slotOptions.SplitMantisClaw;
             }
 
@@ -363,6 +363,8 @@ namespace APMapMod.Data
                 case "Skills":
                     return slotOptions.RandomizeSkills;
                 case "Charms":
+                    if (placement.Name == LocationNames.King_Fragment)
+                        return slotOptions.WhitePalace is not WhitePalaceOption.Exclude;
                     return slotOptions.RandomizeCharms;
                 case "Keys":
                     return slotOptions.RandomizeKeys;
@@ -403,16 +405,24 @@ namespace APMapMod.Data
                 case "Boss Geo":
                     return slotOptions.RandomizeBossGeo;
                 case "Soul Totems":
-                    // if (placement.Name.Contains("White_Palace"))
-                    // {
-                    //     return slotOptions.WhitePalaceLocations;
-                    // }
-                    // if (placement.Name.Contains("Path_Of_Pain"))
-                    // {
-                    //     return slotOptions.PathOfPainLocations;
-                    // }
+                    if (placement.Name.Contains("White_Palace"))
+                    {
+                        return slotOptions.WhitePalace is WhitePalaceOption.NoPathOfPain or WhitePalaceOption.Include;
+                    }
+                    if (placement.Name.Contains("Path_Of_Pain"))
+                    {
+                        return slotOptions.WhitePalace == WhitePalaceOption.Include;
+                    }
                     return slotOptions.RandomizeSoulTotems;
                 case "Lore Tablets":
+                    if (placement.Name.Contains("Palace"))
+                    {
+                        return slotOptions.WhitePalace == WhitePalaceOption.NoPathOfPain;
+                    }
+                    if (placement.Name.Contains("Path_Of_Pain"))
+                    {
+                        return slotOptions.WhitePalace == WhitePalaceOption.Include;
+                    }
                     return slotOptions.RandomizeLoreTablets;
                 case "Shops":
                     return true;

@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using APMapMod.Util;
 using Archipelago.MultiClient.Net;
-using UnityEngine;
 
 namespace APMapMod
 {
@@ -20,7 +19,7 @@ namespace APMapMod
 
         public bool ToggleButtonInsideMenu { get; }
         
-        public override string GetVersion() => "0.2.0";
+        public override string GetVersion() => GetType().Assembly.GetName().Version.ToString();
 
         public override int LoadPriority() => 10;
 
